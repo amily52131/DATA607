@@ -1,0 +1,32 @@
+---
+title: "DATA 607 Assignment 1"
+author: "Ying Fang Lee"
+date: "9/8/2024"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(readr)
+library(tidyverse)
+urlfile = "https://raw.githubusercontent.com/fivethirtyeight/data/master/redlining/metro-grades.csv"
+metro_grade <- read_csv(url(urlfile))
+
+```
+
+## Overview
+
+For this assignment I chose the article [The Lasting Legacy Of Redlining](https://projects.fivethirtyeight.com/redlining/) published on February 9^th^, 2022 by Ryan Best and Eliana Mejia to see how past practices based racial demographics are still affecting the neighborhoods even 50 years after the the practice was banned. In this article, the arthors compared data from Home Owners' Loan Corporation from 1935-1940 of redlined cities to the demographics information collected on the 2020 census in the same cities to understand if the racial demographic have changed since banning of redline practice. Unfortunately, most redline neighborhoods are still deeply segregated.
+
+To understand how the HOLC was determining the grade I looked at the data for Pittsburgh, PA and tried to compare percentage of each race to the surrounding area. I rearranged the column *surr_area_pct_white* and *surr_area_pct_black* to be in front of the column *pct_white* so that I can see the percentages side by side from the source file [metro-grades.csv](https://raw.githubusercontent.com/fivethirtyeight/data/master/redlining/metro-grades.csv) and displayed the result with below R code.
+
+```{r, echo=TRUE}
+
+pittsburgh_grade <- metro_grade |> 
+  filter(metro_area == "Pittsburgh, PA") |> 
+  relocate(surr_area_pct_white:surr_area_pct_black, .before = pct_white)
+
+pittsburgh_grade
+```
+

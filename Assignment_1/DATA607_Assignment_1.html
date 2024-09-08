@@ -368,6 +368,9 @@ the demographics information collected on the 2020 census in the same
 cities to understand if the racial demographic have changed since
 banning of redline practice. Unfortunately, most redline neighborhoods
 are still deeply segregated.</p>
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
 <p>To understand how the HOLC was determining the grade I looked at the
 data for Pittsburgh, PA and tried to compare percentage of each race to
 the surrounding area. I rearranged the column
@@ -377,23 +380,44 @@ side by side from the source file <a href="https://raw.githubusercontent.com/fiv
 and displayed the result with below R code.</p>
 <pre class="r"><code>pittsburgh_grade &lt;- metro_grade |&gt; 
   filter(metro_area == &quot;Pittsburgh, PA&quot;) |&gt; 
-  relocate(surr_area_pct_white:surr_area_pct_black, .before = pct_white)
+  relocate(surr_area_pct_white:surr_area_pct_black, .before = pct_white) |&gt; 
+  select(metro_area:holc_grade, surr_area_pct_white:pct_black)
 
 pittsburgh_grade</code></pre>
-<pre><code>## # A tibble: 4 × 28
-##   metro_area     holc_grade white_pop black_pop hisp_pop asian_pop other_pop
-##   &lt;chr&gt;          &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1 Pittsburgh, PA A              25473       777     1236      3125      1496
-## 2 Pittsburgh, PA B             121234     23918     5992      9270      9167
-## 3 Pittsburgh, PA C             110738     42730     6521      6072     10195
-## 4 Pittsburgh, PA D              52948     34640     3352      3127      5592
-## # ℹ 21 more variables: total_pop &lt;dbl&gt;, surr_area_pct_white &lt;dbl&gt;,
-## #   surr_area_pct_black &lt;dbl&gt;, pct_white &lt;dbl&gt;, pct_black &lt;dbl&gt;,
-## #   pct_hisp &lt;dbl&gt;, pct_asian &lt;dbl&gt;, pct_other &lt;dbl&gt;, lq_white &lt;dbl&gt;,
-## #   lq_black &lt;dbl&gt;, lq_hisp &lt;dbl&gt;, lq_asian &lt;dbl&gt;, lq_other &lt;dbl&gt;,
-## #   surr_area_white_pop &lt;dbl&gt;, surr_area_black_pop &lt;dbl&gt;,
-## #   surr_area_hisp_pop &lt;dbl&gt;, surr_area_asian_pop &lt;dbl&gt;,
-## #   surr_area_other_pop &lt;dbl&gt;, surr_area_pct_hisp &lt;dbl&gt;, …</code></pre>
+<pre><code>## # A tibble: 4 × 6
+##   metro_area     holc_grade surr_area_pct_white surr_area_pct_black pct_white
+##   &lt;chr&gt;          &lt;chr&gt;                    &lt;dbl&gt;               &lt;dbl&gt;     &lt;dbl&gt;
+## 1 Pittsburgh, PA A                         74.9                12.9      79.3
+## 2 Pittsburgh, PA B                         74.9                12.9      71.5
+## 3 Pittsburgh, PA C                         74.9                12.9      62.8
+## 4 Pittsburgh, PA D                         74.9                12.9      53.1
+## # ℹ 1 more variable: pct_black &lt;dbl&gt;</code></pre>
+<p>Through this example, I can see that the location quotient was
+calculated by dividing percentage of race population by the surrounding
+race population. This shows that compare to the surrounding area, each
+demographic was more or less represented in the HOLC graded areas.
+Looking at the data with only HoLC grade A and D with the location
+quotient of each race we can see that most places with a grade A has
+<em>lq_white</em> closer to 1 or more.</p>
+<pre class="r"><code>grade_lq &lt;- metro_grade |&gt; 
+  filter(holc_grade %in% c(&quot;A&quot;,&quot;D&quot;) ) |&gt; 
+  select(metro_area, holc_grade,lq_white:lq_other)
+
+grade_lq</code></pre>
+<pre><code>## # A tibble: 276 × 7
+##    metro_area             holc_grade lq_white lq_black lq_hisp lq_asian lq_other
+##    &lt;chr&gt;                  &lt;chr&gt;         &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+##  1 Akron, OH              A              0.94     1.41    1        0.46     0.97
+##  2 Akron, OH              D              0.57     2.76    1.45     0.74     1.21
+##  3 Albany-Schenectady-Tr… A              1.09     0.66    0.77     1.21     0.72
+##  4 Albany-Schenectady-Tr… D              0.51     3.35    1.83     0.62     1.26
+##  5 Allentown-Bethlehem-E… A              1.1      0.69    0.87     0.43     1.22
+##  6 Allentown-Bethlehem-E… D              0.93     0.92    1.21     0.54     1.19
+##  7 Altoona, PA            A              1.03     0.08    2.09     1.18     0.78
+##  8 Altoona, PA            D              0.97     1.61    0.9      0.73     1.18
+##  9 Amarillo, TX           A              1.62     0.38    0.46     0.62     1.57
+## 10 Amarillo, TX           D              0.52     1.07    1.53     0.74     0.77
+## # ℹ 266 more rows</code></pre>
 </div>
 
 

@@ -19,14 +19,25 @@ metro_grade <- read_csv(url(urlfile))
 
 For this assignment I chose the article [The Lasting Legacy Of Redlining](https://projects.fivethirtyeight.com/redlining/) published on February 9^th^, 2022 by Ryan Best and Eliana Mejia to see how past practices based racial demographics are still affecting the neighborhoods even 50 years after the the practice was banned. In this article, the arthors compared data from Home Owners' Loan Corporation from 1935-1940 of redlined cities to the demographics information collected on the 2020 census in the same cities to understand if the racial demographic have changed since banning of redline practice. Unfortunately, most redline neighborhoods are still deeply segregated.
 
-To understand how the HOLC was determining the grade I looked at the data for Pittsburgh, PA and tried to compare percentage of each race to the surrounding area. I rearranged the column *surr_area_pct_white* and *surr_area_pct_black* to be in front of the column *pct_white* so that I can see the percentages side by side from the source file [metro-grades.csv](https://raw.githubusercontent.com/fivethirtyeight/data/master/redlining/metro-grades.csv) and displayed the result with below R code.
+## Conclusion
 
+To understand how the HOLC was determining the grade I looked at the data for Pittsburgh, PA and tried to compare percentage of each race to the surrounding area. I rearranged the column *surr_area_pct_white* and *surr_area_pct_black* to be in front of the column *pct_white* so that I can see the percentages side by side from the source file [metro-grades.csv](https://raw.githubusercontent.com/fivethirtyeight/data/master/redlining/metro-grades.csv) and displayed the result with below R code. 
 ```{r, echo=TRUE}
 
 pittsburgh_grade <- metro_grade |> 
   filter(metro_area == "Pittsburgh, PA") |> 
-  relocate(surr_area_pct_white:surr_area_pct_black, .before = pct_white)
+  relocate(surr_area_pct_white:surr_area_pct_black, .before = pct_white) |> 
+  select(metro_area:holc_grade, surr_area_pct_white:pct_black)
 
 pittsburgh_grade
+```
+
+Through this example, I can see that the location quotient was calculated by dividing percentage of race population by the surrounding race population. This shows that compare to the surrounding area, each demographic was more or less represented in the HOLC graded areas. Looking at the data with only HoLC grade A and D with the location quotient of each race we can see that most places with a grade A has *lq_white* closer to 1 or more.
+```{r}
+grade_lq <- metro_grade |> 
+  filter(holc_grade %in% c("A","D") ) |> 
+  select(metro_area, holc_grade,lq_white:lq_other)
+
+grade_lq
 ```
 

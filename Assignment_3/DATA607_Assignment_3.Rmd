@@ -1,0 +1,197 @@
+---
+title: "DATA607_Assignment_3"
+author: "Ying Fang Lee"
+date: "9/22/2024"
+output: html_document
+---
+
+
+## 1- Normalization
+
+Created a csv file with sample table to be normalized [Sample Table.csv](https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Assignment_3/Normalize%20Table.csv) and uploaded to GitHub. This table has 7 columns that represents a students' grade for courses taught by different professors.  
+
+####  Check if it is in first normal form
+1) Each row is representing a different observation
+2) No mix data types in each column
+3) Does not store a repeating group of data items in one row
+4) This table have a composite primary keys of Student_ID, Course_ID, and Teacher_Email
+```{r}
+library(tidyverse)
+
+# Read the file from GitHub and save to a data frame
+denormalized <- read.csv("https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Assignment_3/Normalize%20Table.csv")
+print(denormalized)
+
+```
+
+####  Check if it is in second normal form
+Second normal form, each non-key attribute must depend on the entire primary key
+Student_Name depends on the Student_ID
+Course_Name depends on the Course_ID
+Teacher name each have unique email and they each teach a course
+The bridge table has grade dependent on student, course, and teacher
+
+```{r}
+# Student_ID is the primary key for Student_Name
+# Get the distinct Students from the table
+Students <- denormalized %>% 
+  select(Student_ID, Student_Name) %>% 
+  distinct(Student_ID, .keep_all = TRUE)%>% 
+  print()
+
+# Course_ID is the primary key for Course_Name
+# Get the distinct courses from the table
+Courses <- denormalized %>% 
+  select(Course_ID, Course_Name) %>% 
+  distinct(Course_ID, .keep_all = TRUE)%>% 
+  print()
+
+# Teacher.email is the primary key for teacher and each teacher teaches a course
+# Get the distinct teachers from the table
+Teachers <- denormalized %>% 
+  select(Teacher, Teacher.Email, Course_ID) %>% 
+  distinct(Teacher.Email, .keep_all = TRUE) %>% 
+  print()
+
+# The de-normalized table after removing Student, Courses, and teacher with only the primary key of each table.
+Bridge_Table <- denormalized %>% 
+  select(Student_ID, Course_ID, Teacher.Email, Grade) %>% 
+  print()
+```
+
+####  Check if it is in third normal form
+Each non-key attribute must be dependent on the key, the whole key, and nothing but the key.
+
+```{r}
+# Looking at the Teachers table there is a relationship between Course_ID and Teachers.To represent that I created another bridge table called Teachers_Course and created an ID call Section_ID and created a primary key call Teacher_ID
+
+# Modify Teachers table to add Teacher_ID
+Teachers <- Teachers %>% 
+  mutate(Teacher_ID = 1:n(), .before = Teacher) %>% 
+  print()
+
+# Create dataframe for Course_Section
+Teacher_Course <- Teachers %>% 
+  select(Course_ID, Teacher_ID) %>% 
+  arrange(Course_ID) %>% 
+  mutate(Section_ID = c(1,2,1)) %>% # manually creating the section_id for now
+  print()
+
+# converting the bridge table to Grades based on student, course, and section
+Grades <- Bridge_Table %>% 
+  left_join(Teachers) %>% 
+  left_join(Teacher_Course) %>% 
+  select(Student_ID, Course_ID, Section_ID, Grade) %>% 
+  print()
+
+
+```
+#### Normalized tables
+```{r}
+print(Students)
+print(Courses)
+print(Teachers)
+print(Teacher_Course)
+print(Grades)
+
+```
+
+### 2 - Character Manipulation
+
+Using the 173 majors listed in fivethirtyeight.com’s College [Majors dataset](https://raw.githubusercontent.com/fivethirtyeight/data/refs/heads/master/college-majors/majors-list.csv), provide code that identifies the majors that contain either "DATA" or "STATISTICS". 
+
+There are three majors containing "DATA" or "STATISTICS" in the name.
+```{r}
+majors <- read.csv("https://raw.githubusercontent.com/fivethirtyeight/data/refs/heads/master/college-majors/majors-list.csv")
+
+str_view(majors$Major,"DATA|STATISTICS")
+```
+
+### 3. Describe, in words, what these expressions will match:
+
+#### (.)\1\1 
+This expression will match a string with three repeating characters. \
+(.) Capturing group is of any character \
+\1 same character as the capturing group repeat once \
+\1 same character as the capturing group repeat the second time \
+```{r}
+x <- str_c("aaa bbb abc")
+str_view(x, "(.)\\1\\1")
+```
+  
+#### "(.)(.)\\2\\1"
+This expression will match two characters followed by two characters in reversed order. \
+(.) 1^st capturing group of any character \
+(.) 2^nd capturing group of any character \
+\\2 character from the second capturing group \
+\\1 character from the first capturing group \
+```{r}
+x <- str_c("abba abbac aaaa")
+str_view(x, "(.)(.)\\2\\1")
+```
+  
+#### (..)\1
+This expression will match string with any two characters repeated once. \ 
+(..) capturing group of any two characters \
+\1 repeat the characters from the capturing group once \
+
+```{r}
+x <- str_c("aaaa abababab cababc")
+str_view(x, "(..)\\1")
+```
+  
+#### "(.).\\1.\\1"
+This expression match 5 characters where every other odd character is the same character \
+
+(.) Capturing group of any character \
+. any character \
+\1 repeat of capturing group character \
+. any character \
+\1 repeat of capturing group character \
+ 
+```{r}
+x <- str_c("ababa abaca aaaaaa")
+str_view(x, "(.).\\1.\\1")
+```
+  
+#### "(.)(.)(.).*\\3\\2\\1"
+This expression will match string with the three characters follow by any character and then the reverse of the three characters in the beginning \
+
+(.) first capturing group of any character \
+(.) second capturing group of any character \
+(.) third capturing group of any character \
+.* any number of characters \
+\3 third capturing group of any character \
+\2 second capturing group of any character \
+\1 first capturing group of any character \
+```{r}
+x <- str_c("abcdefedcba efg gfe")
+str_view(x,"(.)(.)(.).*\\3\\2\\1")
+
+```
+### 4. Construct regular expressions to match words that:
+#### Start and end with the same character
+```{r}
+# "(.).*\\1"
+x <- str_c("aba xyxdwn blob")
+str_view(x, "(.).*\\1" )
+```
+
+#### Contain a repeated pair of letters (e.g. "church" contains "ch" repeated twice.)
+```{r}
+# "(..).*\\1"
+x <- ("church photography")
+str_view(x, "(..).*\\1")
+# If we want to tweak it to have letters starts and ends with the same letters
+# "^(..).*\\1$"
+x <- str_c("church")
+str_view(x, "^(..).*\\1$")
+```
+  
+#### Contain one letter repeated in at least three places (e.g. "eleven" contains three "e"s.)
+```{r}
+# "(.).*\\1.*\\1"
+x <- str_c("ababa cdceleven fififofum")
+str_view(x, "(.).*\\1.*\\1")
+```
+

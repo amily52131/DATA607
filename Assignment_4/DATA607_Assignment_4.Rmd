@@ -1,0 +1,50 @@
+---
+title: "DATA607_Assignment_4"
+author: "Ying Fang Lee"
+date: "9/29/2024"
+output: html_document
+---
+
+### 1) Create a .CSV file (or optionally, a MySQL database!) that includes all of the information above. You’re encouraged to use a “wide” structure similar to how the information appears above, so that you can practice tidying and transformations as described below.
+
+I have created a csv file with the information and uploaded to [Github](https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Assignment_4/Tifdying%20and%20Transforming%20Data.csv). I will be using this file to manipulate into tidy form.
+
+```{r}
+library(tidyverse)
+
+# Read the file from GitHub and save to a data frame
+airlines <- read.csv("https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Assignment_4/Tifdying%20and%20Transforming%20Data.csv")
+print(airlines)
+```
+
+
+### 2) Tidy data
+```{r}
+# Taking care of empty spaces and set them to NA
+airlines[airlines ==""] <- NA
+
+# Looking at data using pivot_longer
+airlines_long <- airlines %>% 
+  fill(X, .direction = "down") %>%  #fill in the data from the previous row
+  pivot_longer(
+    cols = Los.Angeles:Seattle,
+    names_to = "Location",
+    values_to = "Count",
+    values_drop_na = TRUE
+  ) %>% 
+  rename(Airline = X, Status = X.1) %>% 
+  print()
+
+# Looking at data using pivot_wider
+airlines_wide <- airlines %>% 
+  fill(X, .direction = "down") %>% 
+  drop_na() %>% 
+  pivot_wider(
+    names_from = X.1,
+    values_from = Los.Angeles:Seattle
+  ) %>% 
+  print()
+
+```
+
+

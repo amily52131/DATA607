@@ -11,6 +11,7 @@ I have created a csv file with the information and uploaded to [Github](https://
 
 ```{r}
 library(tidyverse)
+library(janitor)
 
 # Read the file from GitHub and save to a data frame
 airlines <- read.csv("https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Assignment_4/Tifdying%20and%20Transforming%20Data.csv")
@@ -19,32 +20,83 @@ print(airlines)
 
 
 ### 2) Tidy data
+
+To make the data tidy we would have to think about reformatting the table and present it with a way that each column is a variable, each row is an observation, and each cell is a value. First we have to think about the empty values in our table. I used excel to create my table and for the cells that have no value I tabbed to the next cell or I traverse the cells with the arrows. These cells were either recorded as empty cells "" or null values when converted to csv files. R has many build in functions that can take care of NA values, so the first step I did to clean up my data is to remove all empty cells and making them NA. Since my data did not have any other odd characters I did not do any more cleaning other than converting the empty cells to NA values. However, in other cases I think we would have to think about handling extra spaces, special characters, or corrupt data with regular expression. 
+
 ```{r}
 # Taking care of empty spaces and set them to NA
 airlines[airlines ==""] <- NA
+```
 
+Then I began organizing my data. The empty columns were renamed column X and X.1 after R load the data into data frame. I renamed my columns to meaningful names and correct formatting.
+
+```{r}
+# Using clean_names() part of the janitor package to replace the . in the names and remove space for the column name
+airlines <- airlines %>% 
+  rename(Airline = X, Status = X.1) %>% 
+  clean_names()
+
+# Using fill() part of dplyer to fill the data in the column with the value from before until a different value is encountered
+airlines <- airlines %>% 
+  fill(airline, .direction = "down")
+
+print(airlines)
+```
+I do notice there is a row of NA values in my table but I know that R and the tidyverse library can handle this very easily. I tried looking at the data the "long" way and "wide" way with the pivot_longer and pivot_wider function.  
+In pivot_longer, I condensed the columns and made a "location" column to include all the locations the flights arrive to and a "count" column to count the number of flights on time or delayed. Using the values_drop_na variable in pivot_longer functiion, I was able to drop the row with NA values. 
+```{r}
 # Looking at data using pivot_longer
 airlines_long <- airlines %>% 
-  fill(X, .direction = "down") %>%  #fill in the data from the previous row
   pivot_longer(
-    cols = Los.Angeles:Seattle,
-    names_to = "Location",
-    values_to = "Count",
+    cols = los_angeles:seattle,
+    names_to = "location",
+    values_to = "count",
     values_drop_na = TRUE
   ) %>% 
-  rename(Airline = X, Status = X.1) %>% 
   print()
 
+
+```
+In pivot_wider I dropped the row with NA values before I expand the columns with pivot_wider since I am trying to expand with the "status" variable against all the other location columns. I ended up with location columns of "on time" or "delayed"
+```{r}
 # Looking at data using pivot_wider
 airlines_wide <- airlines %>% 
-  fill(X, .direction = "down") %>% 
-  drop_na() %>% 
+  drop_na() %>% # drop the rows that has na values in there
   pivot_wider(
-    names_from = X.1,
-    values_from = Los.Angeles:Seattle
+    names_from = status,
+    values_from = los_angeles:seattle
   ) %>% 
+  print()
+```
+
+I think it is easier with pivot_longer to manipulate data later since I can think in columns vs thinking in rows. 
+
+### Perform analysis to compare the arrival delays for the two airlines.
+I tried two different ways of analyzing with the "longer" representation of data to compare the arrival delays of each airline. I think it would be best to represent as percentage of flights on time over all flights taken. First attempt I break the data into two tables and then join them to calculate the percentage. Second attempt I tried not breaking into other tables and used only group_by, mutate, and summarise to come up with final data. In my first attempt I can see all the calculated columns and gave me more insight but the result of both attempts are the same. 
+
+Around 89 percent of AM WEST flights arrive on time and around 87 percent of Alaska flights arrive to the locations on time.
+
+```{r}
+# Break into different summary tables 
+total_flights <- airlines_long %>% 
+  group_by(airline) %>% 
+  summarise(all_loc = sum(count)) #%>% 
+total_status <- airlines_long %>% 
+  group_by(airline, status) %>% 
+  summarise(total_status = sum(count))
+attempt_1 <- total_status %>%
+  left_join(total_flights) %>% 
+  mutate(percentage = total_status/all_loc*100) %>% 
+  print()
+
+# Second attempt without breaking into different tables
+attempt_2 <- airlines_long %>% 
+  group_by(airline) %>% 
+  mutate(all_loc = sum(count),
+         percentage = count/all_loc*100) %>% 
+  group_by(airline, status, all_loc) %>% 
+  summarise(total_per = sum(percentage)) %>% 
   print()
 
 ```
-
 

@@ -374,6 +374,13 @@ I will be using this file to manipulate into tidy form.</p>
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 ## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<pre class="r"><code>library(janitor)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;janitor&#39;
+## 
+## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     chisq.test, fisher.test</code></pre>
 <pre class="r"><code># Read the file from GitHub and save to a data frame
 airlines &lt;- read.csv(&quot;https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Assignment_4/Tifdying%20and%20Transforming%20Data.csv&quot;)
 print(airlines)</code></pre>
@@ -386,60 +393,158 @@ print(airlines)</code></pre>
 </div>
 <div id="tidy-data" class="section level3">
 <h3>2) Tidy data</h3>
+<p>To make the data tidy we would have to think about reformatting the
+table and present it with a way that each column is a variable, each row
+is an observation, and each cell is a value. First we have to think
+about the empty values in our table. I used excel to create my table and
+for the cells that have no value I tabbed to the next cell or I traverse
+the cells with the arrows. These cells were either recorded as empty
+cells “” or null values when converted to csv files. R has many build in
+functions that can take care of NA values, so the first step I did to
+clean up my data is to remove all empty cells and making them NA. Since
+my data did not have any other odd characters I did not do any more
+cleaning other than converting the empty cells to NA values. However, in
+other cases I think we would have to think about handling extra spaces,
+special characters, or corrupt data with regular expression.</p>
 <pre class="r"><code># Taking care of empty spaces and set them to NA
-airlines[airlines ==&quot;&quot;] &lt;- NA
+airlines[airlines ==&quot;&quot;] &lt;- NA</code></pre>
+<p>Then I began organizing my data. The empty columns were renamed
+column X and X.1 after R load the data into data frame. I renamed my
+columns to meaningful names and correct formatting.</p>
+<pre class="r"><code># Using clean_names() part of the janitor package to replace the . in the names and remove space for the column name
+airlines &lt;- airlines %&gt;% 
+  rename(Airline = X, Status = X.1) %&gt;% 
+  clean_names()
 
-# Looking at data using pivot_longer
+# Using fill() part of dplyer to fill the data in the column with the value from before until a different value is encountered
+airlines &lt;- airlines %&gt;% 
+  fill(airline, .direction = &quot;down&quot;)
+
+print(airlines)</code></pre>
+<pre><code>##   airline  status los_angeles phoenix san_diego san_francisco seattle
+## 1  Alaska on time         497     221       212           503    1841
+## 2  Alaska delayed          62      12        20           102     305
+## 3  Alaska    &lt;NA&gt;          NA      NA        NA            NA      NA
+## 4 AM WEST on time         694    4840       383           320     201
+## 5 AM WEST delayed         117     415        65           129      61</code></pre>
+<p>I do notice there is a row of NA values in my table but I know that R
+and the tidyverse library can handle this very easily. I tried looking
+at the data the “long” way and “wide” way with the pivot_longer and
+pivot_wider function.<br />
+In pivot_longer, I condensed the columns and made a “location” column to
+include all the locations the flights arrive to and a “count” column to
+count the number of flights on time or delayed. Using the values_drop_na
+variable in pivot_longer functiion, I was able to drop the row with NA
+values.</p>
+<pre class="r"><code># Looking at data using pivot_longer
 airlines_long &lt;- airlines %&gt;% 
-  fill(X, .direction = &quot;down&quot;) %&gt;%  #fill in the data from the previous row
   pivot_longer(
-    cols = Los.Angeles:Seattle,
-    names_to = &quot;Location&quot;,
-    values_to = &quot;Count&quot;,
+    cols = los_angeles:seattle,
+    names_to = &quot;location&quot;,
+    values_to = &quot;count&quot;,
     values_drop_na = TRUE
   ) %&gt;% 
-  rename(Airline = X, Status = X.1) %&gt;% 
   print()</code></pre>
 <pre><code>## # A tibble: 20 × 4
-##    Airline Status  Location      Count
+##    airline status  location      count
 ##    &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;         &lt;int&gt;
-##  1 Alaska  on time Los.Angeles     497
-##  2 Alaska  on time Phoenix         221
-##  3 Alaska  on time San.Diego       212
-##  4 Alaska  on time San.Francisco   503
-##  5 Alaska  on time Seattle        1841
-##  6 Alaska  delayed Los.Angeles      62
-##  7 Alaska  delayed Phoenix          12
-##  8 Alaska  delayed San.Diego        20
-##  9 Alaska  delayed San.Francisco   102
-## 10 Alaska  delayed Seattle         305
-## 11 AM WEST on time Los.Angeles     694
-## 12 AM WEST on time Phoenix        4840
-## 13 AM WEST on time San.Diego       383
-## 14 AM WEST on time San.Francisco   320
-## 15 AM WEST on time Seattle         201
-## 16 AM WEST delayed Los.Angeles     117
-## 17 AM WEST delayed Phoenix         415
-## 18 AM WEST delayed San.Diego        65
-## 19 AM WEST delayed San.Francisco   129
-## 20 AM WEST delayed Seattle          61</code></pre>
+##  1 Alaska  on time los_angeles     497
+##  2 Alaska  on time phoenix         221
+##  3 Alaska  on time san_diego       212
+##  4 Alaska  on time san_francisco   503
+##  5 Alaska  on time seattle        1841
+##  6 Alaska  delayed los_angeles      62
+##  7 Alaska  delayed phoenix          12
+##  8 Alaska  delayed san_diego        20
+##  9 Alaska  delayed san_francisco   102
+## 10 Alaska  delayed seattle         305
+## 11 AM WEST on time los_angeles     694
+## 12 AM WEST on time phoenix        4840
+## 13 AM WEST on time san_diego       383
+## 14 AM WEST on time san_francisco   320
+## 15 AM WEST on time seattle         201
+## 16 AM WEST delayed los_angeles     117
+## 17 AM WEST delayed phoenix         415
+## 18 AM WEST delayed san_diego        65
+## 19 AM WEST delayed san_francisco   129
+## 20 AM WEST delayed seattle          61</code></pre>
+<p>In pivot_wider I dropped the row with NA values before I expand the
+columns with pivot_wider since I am trying to expand with the “status”
+variable against all the other location columns. I ended up with
+location columns of “on time” or “delayed”</p>
 <pre class="r"><code># Looking at data using pivot_wider
 airlines_wide &lt;- airlines %&gt;% 
-  fill(X, .direction = &quot;down&quot;) %&gt;% 
-  drop_na() %&gt;% 
+  drop_na() %&gt;% # drop the rows that has na values in there
   pivot_wider(
-    names_from = X.1,
-    values_from = Los.Angeles:Seattle
+    names_from = status,
+    values_from = los_angeles:seattle
   ) %&gt;% 
   print()</code></pre>
 <pre><code>## # A tibble: 2 × 11
-##   X       `Los.Angeles_on time` Los.Angeles_delayed `Phoenix_on time`
+##   airline `los_angeles_on time` los_angeles_delayed `phoenix_on time`
 ##   &lt;chr&gt;                   &lt;int&gt;               &lt;int&gt;             &lt;int&gt;
 ## 1 Alaska                    497                  62               221
 ## 2 AM WEST                   694                 117              4840
-## # ℹ 7 more variables: Phoenix_delayed &lt;int&gt;, `San.Diego_on time` &lt;int&gt;,
-## #   San.Diego_delayed &lt;int&gt;, `San.Francisco_on time` &lt;int&gt;,
-## #   San.Francisco_delayed &lt;int&gt;, `Seattle_on time` &lt;int&gt;, Seattle_delayed &lt;int&gt;</code></pre>
+## # ℹ 7 more variables: phoenix_delayed &lt;int&gt;, `san_diego_on time` &lt;int&gt;,
+## #   san_diego_delayed &lt;int&gt;, `san_francisco_on time` &lt;int&gt;,
+## #   san_francisco_delayed &lt;int&gt;, `seattle_on time` &lt;int&gt;, seattle_delayed &lt;int&gt;</code></pre>
+<p>I think it is easier with pivot_longer to manipulate data later since
+I can think in columns vs thinking in rows.</p>
+</div>
+<div id="perform-analysis-to-compare-the-arrival-delays-for-the-two-airlines." class="section level3">
+<h3>Perform analysis to compare the arrival delays for the two
+airlines.</h3>
+<p>I tried two different ways of analyzing with the “longer”
+representation of data to compare the arrival delays of each airline. I
+think it would be best to represent as percentage of flights on time
+over all flights taken. First attempt I break the data into two tables
+and then join them to calculate the percentage. Second attempt I tried
+not breaking into other tables and used only group_by, mutate, and
+summarise to come up with final data. In my first attempt I can see all
+the calculated columns and gave me more insight but the result of both
+attempts are the same.</p>
+<p>Around 89 percent of AM WEST flights arrive on time and around 87
+percent of Alaska flights arrive to the locations on time.</p>
+<pre class="r"><code># Break into different summary tables 
+total_flights &lt;- airlines_long %&gt;% 
+  group_by(airline) %&gt;% 
+  summarise(all_loc = sum(count)) #%&gt;% 
+total_status &lt;- airlines_long %&gt;% 
+  group_by(airline, status) %&gt;% 
+  summarise(total_status = sum(count))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;airline&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<pre class="r"><code>attempt_1 &lt;- total_status %&gt;%
+  left_join(total_flights) %&gt;% 
+  mutate(percentage = total_status/all_loc*100) %&gt;% 
+  print()</code></pre>
+<pre><code>## Joining with `by = join_by(airline)`</code></pre>
+<pre><code>## # A tibble: 4 × 5
+## # Groups:   airline [2]
+##   airline status  total_status all_loc percentage
+##   &lt;chr&gt;   &lt;chr&gt;          &lt;int&gt;   &lt;int&gt;      &lt;dbl&gt;
+## 1 AM WEST delayed          787    7225       10.9
+## 2 AM WEST on time         6438    7225       89.1
+## 3 Alaska  delayed          501    3775       13.3
+## 4 Alaska  on time         3274    3775       86.7</code></pre>
+<pre class="r"><code># Second attempt without breaking into different tables
+attempt_2 &lt;- airlines_long %&gt;% 
+  group_by(airline) %&gt;% 
+  mutate(all_loc = sum(count),
+         percentage = count/all_loc*100) %&gt;% 
+  group_by(airline, status, all_loc) %&gt;% 
+  summarise(total_per = sum(percentage)) %&gt;% 
+  print()</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;airline&#39;, &#39;status&#39;. You can override using
+## the `.groups` argument.</code></pre>
+<pre><code>## # A tibble: 4 × 4
+## # Groups:   airline, status [4]
+##   airline status  all_loc total_per
+##   &lt;chr&gt;   &lt;chr&gt;     &lt;int&gt;     &lt;dbl&gt;
+## 1 AM WEST delayed    7225      10.9
+## 2 AM WEST on time    7225      89.1
+## 3 Alaska  delayed    3775      13.3
+## 4 Alaska  on time    3775      86.7</code></pre>
 </div>
 
 

@@ -100,3 +100,8 @@ attempt_2 <- airlines_long %>%
 
 ```
 
+### 4 Conclusion
+
+I used Microsoft Excel to generate the table for Assignment 4 and saved as csv file then uploaded to Github to load for my analysis. The table from the assignment had various empty column headers and cells. First step after loading the table in R I noticed that the empty column headers were assigned names like *X* and *X.1* and the empty cells were taken as either empty spaces or null values. I renamed the column headers to "airlines" and "status" and changed all the empty spaces to NA values since R has built in functions to take care of NA values. Then I used the fill function going down for column "airlines" so that the values will be filled in until the next value encountered. To take care of the empty row in the table, I used the *values_drop_na* value in *pivot_longer* function to remove the empty row and used the arrival location as key called *location* to expand the table. 
+
+For my analysis, I first group the data by *airline* to get the total flights arrived for each airlines then calculated the percentage with that information. Use the mutate function to add the information to the table and then group again by airline and status. Use the summary function I was able to find the percentage in which flights arrive on time or delayed per each airline. I find that around 89 percent of AM WEST flights arrive on time and around 87 percent of Alaska flights arrive to the locations on time.

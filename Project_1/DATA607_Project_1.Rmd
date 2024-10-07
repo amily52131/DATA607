@@ -10,15 +10,24 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
 
+### Project 1
 
+##### In this project, you’re given a text file with chess tournament results where the information has some structure. Your job is to create an R Markdown file that generates a .CSV file (that could for example be imported into a SQL database) with the following information for all of the players:
+##### Player’s Name, Player’s State, Total Number of Points, Player’s Pre-Rating, and Average Pre Chess Rating of Opponents
+
+I first uploaded the txt file onto my GitHub repository so I can use the read.table function.I wanted to use read.table instead of readlines function because it will be loaded as r dataframe and I can pass the argument to skip the first 4 lines. Reviewing the txt file shows that the real data starts on line 5 and everything above was the title and boarder formatting.
 
 ```{r}
 # Load txt data
 url = "https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Project_1/tournamentinfo.txt"
 
 # I decided to skip the top 4 rows of the data because I only want the data
-df <- read.table(url(url), sep = '\t', skip = 4)
+df <- read.table(url, sep = '\t', skip = 4)
+```
 
+I was approaching this issue from a couple angles, I first considered if I will be able to use regular express to isolate the string pattern and extract the values I need. However, upon reviewing each line, the strings are a set length with the deliminators at the same position. So all I have to do is to cut the strings where each position of the deliminator I should have the value I want. 
+
+```{r}
 # Trying to determine if every string is the same length
 df <- df %>% 
   mutate(stlength = str_length(V1))
@@ -28,9 +37,12 @@ df <- df %>%
 p <- str_locate_all(df$V1[1], "\\|")
 # to make calling the matrix value easier, I made it a list
 p <- p[[1]][,1]
+```
 
+Now that we have the position of all the deliminators we can parse through the data and extract the values. I noticed that every three rows the data pattern repeats. First row have information such as PlayerID, Player's Name, Total Number of Points, Rounds 1-7 Opponents and the status of the game. Second row has the information such as State, USCF ID, Pre rating, and post rating. Then the third row has the decorative "-" row. So we filter the data by dividing the row number by 3 and looking at only remainder of 1 to extract the first set of data patterns. Then do it again for remainder of 2 for the second set of data patterns. Then I joined them based on the PlayerID since the data is in consecutive order.
 
-# Extracting from the datafram, Player ID, Player's Name, Total Number of Points
+```{r}
+# Extracting from the dataframe: Player ID, Player's Name, Total Number of Points
 chess <- df %>% 
   # Every three rows is the patter to extract so we filter the data by dividing the total number of rows by 3 and find the rows with remainder of 1
   filter(row_number() %% 3 == 1) %>% 
@@ -39,20 +51,14 @@ chess <- df %>%
     PlayerID = substr(V1, 1, p[1] - 1) %>% str_trim() %>% as.integer(),
     PlayerName = substr(V1, p[1] + 1 , p[2] - 1) %>% str_trim(),
     TotalPts = substr(V1, p[2] + 1, p[3] - 1) %>% str_trim() %>% as.numeric(),
-    Result_1 = substr(V1, p[3] + 1, p[3] + 1),
-    Opponent_1 = substr(V1, p[3] + 2, p[4] - 1) %>% str_trim() %>% as.integer(),
-    Result_2 = substr(V1, p[4] + 1, p[4] + 1),
-    Opponent_2 = substr(V1, p[4] + 2, p[5] - 1) %>% str_trim() %>% as.integer(),
-    Result_3 = substr(V1, p[5] + 1, p[5] + 1),
-    Opponent_3 = substr(V1, p[5] + 2, p[6] - 1) %>% str_trim() %>% as.integer(),
-    Result_4 = substr(V1, p[6] + 1, p[6] + 1),
-    Opponent_4 = substr(V1, p[6] + 2, p[7] - 1) %>% str_trim() %>% as.integer(),
-    Result_5 = substr(V1, p[7] + 1, p[7] + 1),
-    Opponent_5 = substr(V1, p[7] + 2, p[8] - 1) %>% str_trim() %>% as.integer(),
-    Result_6 = substr(V1, p[8] + 1, p[8] + 1),
-    Opponent_6 = substr(V1, p[8] + 2, p[9] - 1) %>% str_trim() %>% as.integer(),
-    Result_7 = substr(V1, p[9] + 1, p[9] + 1),
-    Opponent_7 = substr(V1, p[9] + 2, p[10] - 1) %>% str_trim() %>% as.integer()
+    # This part could probably be inside a function
+    Round_1 = substr(V1, p[3] + 2, p[4] - 1) %>% str_trim() %>% as.integer(),
+    Round_2 = substr(V1, p[4] + 2, p[5] - 1) %>% str_trim() %>% as.integer(),
+    Round_3 = substr(V1, p[5] + 2, p[6] - 1) %>% str_trim() %>% as.integer(),
+    Round_4 = substr(V1, p[6] + 2, p[7] - 1) %>% str_trim() %>% as.integer(),
+    Round_5 = substr(V1, p[7] + 2, p[8] - 1) %>% str_trim() %>% as.integer(),
+    Round_6 = substr(V1, p[8] + 2, p[9] - 1) %>% str_trim() %>% as.integer(),
+    Round_7 = substr(V1, p[9] + 2, p[10] - 1) %>% str_trim() %>% as.integer()
            ) %>%
   select(-c(V1, stlength))
 
@@ -69,7 +75,34 @@ chess1 <- df %>%
 
 # It just so happens that the Player ID is consecutive from 1 to 64 I can join the two tables in one
 chess <- left_join(chess, chess1)
-  
-chess_long <- 
+```
+
+I have a wide table after extracting the data I need but I know that I need to get it into a "longer" format so that I can use dplyr functions like group_by and summarize. I used Pivot_longer function to group all the rounds where player has played against an opponent and drop the values where the player did not play. Renamed the column for the values "OpponentID".
+
+```{r}
+# To make analyzing easier, I decided to make it into a pivot long table
+chess_long <- chess %>% 
+  pivot_longer(
+    cols = starts_with("Round"),
+    names_to = "Rounds",
+    values_to = "OpponentID",
+    values_drop_na = TRUE
+  )
+```
+
+To find out each Opponents' Pre-Rating, I used left_join to join by OpponentID and PlayerID and making sure I only joined with the Pre_Rate column. Then I used the group_by and summarize function to calculate the mean of pre-rate. Then export the result as csv.
+
+```{r}
+
+  # Join the long table "OpponentID" with "PlayerID" from the original table
+chess_long<- chess_long %>% 
+  left_join(chess %>% select(PlayerID, Pre_rate), join_by(OpponentID==PlayerID)) %>% 
+  group_by(PlayerID, PlayerName, TotalPts, Pre_rate = Pre_rate.x) %>% 
+  summarise(Average_Pre_Rating = mean(Pre_rate.y) %>% as.integer()) %>% 
+  print()
+
+# To write as csv
+write.csv(chess_long, "tournamentinfo.csv")
+
 ```
 

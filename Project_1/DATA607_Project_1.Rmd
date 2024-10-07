@@ -1,0 +1,75 @@
+---
+title: "Project_1"
+author: "Ying Fang Lee"
+date: "10/06/2024"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+
+
+```{r}
+# Load txt data
+url = "https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Project_1/tournamentinfo.txt"
+
+# I decided to skip the top 4 rows of the data because I only want the data
+df <- read.table(url(url), sep = '\t', skip = 4)
+
+# Trying to determine if every string is the same length
+df <- df %>% 
+  mutate(stlength = str_length(V1))
+
+# Since information is separated by | in every row I want to know the location as a list using str_locate_all which returns a matrix
+# I've already checked that the location of | is the same through this whole document except the top 4 rows
+p <- str_locate_all(df$V1[1], "\\|")
+# to make calling the matrix value easier, I made it a list
+p <- p[[1]][,1]
+
+
+# Extracting from the datafram, Player ID, Player's Name, Total Number of Points
+chess <- df %>% 
+  # Every three rows is the patter to extract so we filter the data by dividing the total number of rows by 3 and find the rows with remainder of 1
+  filter(row_number() %% 3 == 1) %>% 
+  # Finding the variables relative to the position of |
+  mutate(
+    PlayerID = substr(V1, 1, p[1] - 1) %>% str_trim() %>% as.integer(),
+    PlayerName = substr(V1, p[1] + 1 , p[2] - 1) %>% str_trim(),
+    TotalPts = substr(V1, p[2] + 1, p[3] - 1) %>% str_trim() %>% as.numeric(),
+    Result_1 = substr(V1, p[3] + 1, p[3] + 1),
+    Opponent_1 = substr(V1, p[3] + 2, p[4] - 1) %>% str_trim() %>% as.integer(),
+    Result_2 = substr(V1, p[4] + 1, p[4] + 1),
+    Opponent_2 = substr(V1, p[4] + 2, p[5] - 1) %>% str_trim() %>% as.integer(),
+    Result_3 = substr(V1, p[5] + 1, p[5] + 1),
+    Opponent_3 = substr(V1, p[5] + 2, p[6] - 1) %>% str_trim() %>% as.integer(),
+    Result_4 = substr(V1, p[6] + 1, p[6] + 1),
+    Opponent_4 = substr(V1, p[6] + 2, p[7] - 1) %>% str_trim() %>% as.integer(),
+    Result_5 = substr(V1, p[7] + 1, p[7] + 1),
+    Opponent_5 = substr(V1, p[7] + 2, p[8] - 1) %>% str_trim() %>% as.integer(),
+    Result_6 = substr(V1, p[8] + 1, p[8] + 1),
+    Opponent_6 = substr(V1, p[8] + 2, p[9] - 1) %>% str_trim() %>% as.integer(),
+    Result_7 = substr(V1, p[9] + 1, p[9] + 1),
+    Opponent_7 = substr(V1, p[9] + 2, p[10] - 1) %>% str_trim() %>% as.integer()
+           ) %>%
+  select(-c(V1, stlength))
+
+# Finding the State and Pre-Rating
+chess1 <- df %>% 
+# Every three rows is the patter to extract so we filter the data by dividing the total number of rows by 3 and find the rows with remainder of 2
+  filter(row_number() %% 3 ==2) %>% 
+  mutate(
+    PlayerID = 1:64,
+    State = substr(V1, 1, p[1] - 1) %>% str_trim(),
+    Pre_rate = substr(V1, str_locate(V1, ":"), p[2]-1) %>% str_extract(pattern = '\\d{2,}') %>% as.integer
+  ) %>% 
+  select(-c(V1, stlength))
+
+# It just so happens that the Player ID is consecutive from 1 to 64 I can join the two tables in one
+chess <- left_join(chess, chess1)
+  
+chess_long <- 
+```
+

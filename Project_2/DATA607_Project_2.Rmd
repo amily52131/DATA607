@@ -1,0 +1,15 @@
+---
+title: "Project 2"
+author: "Ying Fang Lee"
+date: "2024-10-13"
+output: html_document
+---
+```{r}
+library(tidyverse)
+```
+
+```{r}
+url <- Project_2/candyhierarchy2017.csv
+https://github.com/amily52131/DATA607/blob/e93750056d00882a78aaf5a173074e51fa3eacc5/Project_2/candyhierarchy2017.csv
+```
+

@@ -1,0 +1,402 @@
+[
+  {
+    "Category": "Electronics",
+    "Item_Name": "Smartphone",
+    "Item_ID": 101,
+    "Brand": "TechBrand",
+    "Price": 699.99,
+    "Variation_ID": "101-A",
+    "Variation_Type": "Color",
+    "Variation_Detail": " Black"
+  },
+  {
+    "Category": "Electronics",
+    "Item_Name": "Smartphone",
+    "Item_ID": 101,
+    "Brand": "TechBrand",
+    "Price": 699.99,
+    "Variation_ID": "101-A",
+    "Variation_Type": " Storage",
+    "Variation_Detail": " 64GB"
+  },
+  {
+    "Category": "Electronics",
+    "Item_Name": "Smartphone",
+    "Item_ID": 101,
+    "Brand": "TechBrand",
+    "Price": 699.99,
+    "Variation_ID": "101-B",
+    "Variation_Type": "Color",
+    "Variation_Detail": " White"
+  },
+  {
+    "Category": "Electronics",
+    "Item_Name": "Smartphone",
+    "Item_ID": 101,
+    "Brand": "TechBrand",
+    "Price": 699.99,
+    "Variation_ID": "101-B",
+    "Variation_Type": " Storage",
+    "Variation_Detail": " 128GB"
+  },
+  {
+    "Category": "Electronics",
+    "Item_Name": "Laptop",
+    "Item_ID": 102,
+    "Brand": "CompuBrand",
+    "Price": 1099.99,
+    "Variation_ID": "102-A",
+    "Variation_Type": "Color",
+    "Variation_Detail": " Silver"
+  },
+  {
+    "Category": "Electronics",
+    "Item_Name": "Laptop",
+    "Item_ID": 102,
+    "Brand": "CompuBrand",
+    "Price": 1099.99,
+    "Variation_ID": "102-A",
+    "Variation_Type": " Storage",
+    "Variation_Detail": " 256GB"
+  },
+  {
+    "Category": "Electronics",
+    "Item_Name": "Laptop",
+    "Item_ID": 102,
+    "Brand": "CompuBrand",
+    "Price": 1099.99,
+    "Variation_ID": "102-B",
+    "Variation_Type": "Color",
+    "Variation_Detail": " Space Gray"
+  },
+  {
+    "Category": "Electronics",
+    "Item_Name": "Laptop",
+    "Item_ID": 102,
+    "Brand": "CompuBrand",
+    "Price": 1099.99,
+    "Variation_ID": "102-B",
+    "Variation_Type": " Storage",
+    "Variation_Detail": " 512GB"
+  },
+  {
+    "Category": "Home Appliances",
+    "Item_Name": "Refrigerator",
+    "Item_ID": 201,
+    "Brand": "HomeCool",
+    "Price": 899.99,
+    "Variation_ID": "201-A",
+    "Variation_Type": "Color",
+    "Variation_Detail": " Stainless Steel"
+  },
+  {
+    "Category": "Home Appliances",
+    "Item_Name": "Refrigerator",
+    "Item_ID": 201,
+    "Brand": "HomeCool",
+    "Price": 899.99,
+    "Variation_ID": "201-A",
+    "Variation_Type": " Capacity",
+    "Variation_Detail": " 20 cu ft"
+  },
+  {
+    "Category": "Home Appliances",
+    "Item_Name": "Refrigerator",
+    "Item_ID": 201,
+    "Brand": "HomeCool",
+    "Price": 899.99,
+    "Variation_ID": "201-B",
+    "Variation_Type": "Color",
+    "Variation_Detail": " White"
+  },
+  {
+    "Category": "Home Appliances",
+    "Item_Name": "Refrigerator",
+    "Item_ID": 201,
+    "Brand": "HomeCool",
+    "Price": 899.99,
+    "Variation_ID": "201-B",
+    "Variation_Type": " Capacity",
+    "Variation_Detail": " 18 cu ft"
+  },
+  {
+    "Category": "Home Appliances",
+    "Item_Name": "Washing Machine",
+    "Item_ID": 202,
+    "Brand": "CleanTech",
+    "Price": 499.99,
+    "Variation_ID": "202-A",
+    "Variation_Type": "Type",
+    "Variation_Detail": " Front Load"
+  },
+  {
+    "Category": "Home Appliances",
+    "Item_Name": "Washing Machine",
+    "Item_ID": 202,
+    "Brand": "CleanTech",
+    "Price": 499.99,
+    "Variation_ID": "202-A",
+    "Variation_Type": " Capacity",
+    "Variation_Detail": " 4.5 cu ft"
+  },
+  {
+    "Category": "Home Appliances",
+    "Item_Name": "Washing Machine",
+    "Item_ID": 202,
+    "Brand": "CleanTech",
+    "Price": 499.99,
+    "Variation_ID": "202-B",
+    "Variation_Type": "Type",
+    "Variation_Detail": " Top Load"
+  },
+  {
+    "Category": "Home Appliances",
+    "Item_Name": "Washing Machine",
+    "Item_ID": 202,
+    "Brand": "CleanTech",
+    "Price": 499.99,
+    "Variation_ID": "202-B",
+    "Variation_Type": " Capacity",
+    "Variation_Detail": " 5.0 cu ft"
+  },
+  {
+    "Category": "Clothing",
+    "Item_Name": "T-Shirt",
+    "Item_ID": 301,
+    "Brand": "FashionCo",
+    "Price": 19.99,
+    "Variation_ID": "301-A",
+    "Variation_Type": "Color",
+    "Variation_Detail": " Blue"
+  },
+  {
+    "Category": "Clothing",
+    "Item_Name": "T-Shirt",
+    "Item_ID": 301,
+    "Brand": "FashionCo",
+    "Price": 19.99,
+    "Variation_ID": "301-A",
+    "Variation_Type": " Size",
+    "Variation_Detail": " S"
+  },
+  {
+    "Category": "Clothing",
+    "Item_Name": "T-Shirt",
+    "Item_ID": 301,
+    "Brand": "FashionCo",
+    "Price": 19.99,
+    "Variation_ID": "301-B",
+    "Variation_Type": "Color",
+    "Variation_Detail": " Red"
+  },
+  {
+    "Category": "Clothing",
+    "Item_Name": "T-Shirt",
+    "Item_ID": 301,
+    "Brand": "FashionCo",
+    "Price": 19.99,
+    "Variation_ID": "301-B",
+    "Variation_Type": " Size",
+    "Variation_Detail": " M"
+  },
+  {
+    "Category": "Clothing",
+    "Item_Name": "T-Shirt",
+    "Item_ID": 301,
+    "Brand": "FashionCo",
+    "Price": 19.99,
+    "Variation_ID": "301-C",
+    "Variation_Type": "Color",
+    "Variation_Detail": " Green"
+  },
+  {
+    "Category": "Clothing",
+    "Item_Name": "T-Shirt",
+    "Item_ID": 301,
+    "Brand": "FashionCo",
+    "Price": 19.99,
+    "Variation_ID": "301-C",
+    "Variation_Type": " Size",
+    "Variation_Detail": " L"
+  },
+  {
+    "Category": "Clothing",
+    "Item_Name": "Jeans",
+    "Item_ID": 302,
+    "Brand": "DenimWorks",
+    "Price": 49.99,
+    "Variation_ID": "302-A",
+    "Variation_Type": "Color",
+    "Variation_Detail": " Dark Blue"
+  },
+  {
+    "Category": "Clothing",
+    "Item_Name": "Jeans",
+    "Item_ID": 302,
+    "Brand": "DenimWorks",
+    "Price": 49.99,
+    "Variation_ID": "302-A",
+    "Variation_Type": " Size",
+    "Variation_Detail": " 32"
+  },
+  {
+    "Category": "Clothing",
+    "Item_Name": "Jeans",
+    "Item_ID": 302,
+    "Brand": "DenimWorks",
+    "Price": 49.99,
+    "Variation_ID": "302-B",
+    "Variation_Type": "Color",
+    "Variation_Detail": " Light Blue"
+  },
+  {
+    "Category": "Clothing",
+    "Item_Name": "Jeans",
+    "Item_ID": 302,
+    "Brand": "DenimWorks",
+    "Price": 49.99,
+    "Variation_ID": "302-B",
+    "Variation_Type": " Size",
+    "Variation_Detail": " 34"
+  },
+  {
+    "Category": "Books",
+    "Item_Name": "Fiction Novel",
+    "Item_ID": 401,
+    "Brand": "-",
+    "Price": 14.99,
+    "Variation_ID": "401-A",
+    "Variation_Type": "Format",
+    "Variation_Detail": " Hardcover"
+  },
+  {
+    "Category": "Books",
+    "Item_Name": "Fiction Novel",
+    "Item_ID": 401,
+    "Brand": "-",
+    "Price": 14.99,
+    "Variation_ID": "401-A",
+    "Variation_Type": " Language",
+    "Variation_Detail": " English"
+  },
+  {
+    "Category": "Books",
+    "Item_Name": "Fiction Novel",
+    "Item_ID": 401,
+    "Brand": "-",
+    "Price": 14.99,
+    "Variation_ID": "401-B",
+    "Variation_Type": "Format",
+    "Variation_Detail": " Paperback"
+  },
+  {
+    "Category": "Books",
+    "Item_Name": "Fiction Novel",
+    "Item_ID": 401,
+    "Brand": "-",
+    "Price": 14.99,
+    "Variation_ID": "401-B",
+    "Variation_Type": " Language",
+    "Variation_Detail": " Spanish"
+  },
+  {
+    "Category": "Books",
+    "Item_Name": "Non-Fiction Guide",
+    "Item_ID": 402,
+    "Brand": "-",
+    "Price": 24.99,
+    "Variation_ID": "402-A",
+    "Variation_Type": "Format",
+    "Variation_Detail": " eBook"
+  },
+  {
+    "Category": "Books",
+    "Item_Name": "Non-Fiction Guide",
+    "Item_ID": 402,
+    "Brand": "-",
+    "Price": 24.99,
+    "Variation_ID": "402-A",
+    "Variation_Type": " Language",
+    "Variation_Detail": " English"
+  },
+  {
+    "Category": "Books",
+    "Item_Name": "Non-Fiction Guide",
+    "Item_ID": 402,
+    "Brand": "-",
+    "Price": 24.99,
+    "Variation_ID": "402-B",
+    "Variation_Type": "Format",
+    "Variation_Detail": " Paperback"
+  },
+  {
+    "Category": "Books",
+    "Item_Name": "Non-Fiction Guide",
+    "Item_ID": 402,
+    "Brand": "-",
+    "Price": 24.99,
+    "Variation_ID": "402-B",
+    "Variation_Type": " Language",
+    "Variation_Detail": " French"
+  },
+  {
+    "Category": "Sports Equipment",
+    "Item_Name": "Basketball",
+    "Item_ID": 501,
+    "Brand": "SportsGear",
+    "Price": 29.99,
+    "Variation_ID": "501-A",
+    "Variation_Type": "Size",
+    "Variation_Detail": " Size 7"
+  },
+  {
+    "Category": "Sports Equipment",
+    "Item_Name": "Basketball",
+    "Item_ID": 501,
+    "Brand": "SportsGear",
+    "Price": 29.99,
+    "Variation_ID": "501-A",
+    "Variation_Type": " Color",
+    "Variation_Detail": " Orange"
+  },
+  {
+    "Category": "Sports Equipment",
+    "Item_Name": "Tennis Racket",
+    "Item_ID": 502,
+    "Brand": "RacketPro",
+    "Price": 89.99,
+    "Variation_ID": "502-A",
+    "Variation_Type": "Material",
+    "Variation_Detail": " Graphite"
+  },
+  {
+    "Category": "Sports Equipment",
+    "Item_Name": "Tennis Racket",
+    "Item_ID": 502,
+    "Brand": "RacketPro",
+    "Price": 89.99,
+    "Variation_ID": "502-A",
+    "Variation_Type": " Color",
+    "Variation_Detail": " Black"
+  },
+  {
+    "Category": "Sports Equipment",
+    "Item_Name": "Tennis Racket",
+    "Item_ID": 502,
+    "Brand": "RacketPro",
+    "Price": 89.99,
+    "Variation_ID": "502-B",
+    "Variation_Type": "Material",
+    "Variation_Detail": " Aluminum"
+  },
+  {
+    "Category": "Sports Equipment",
+    "Item_Name": "Tennis Racket",
+    "Item_ID": 502,
+    "Brand": "RacketPro",
+    "Price": 89.99,
+    "Variation_ID": "502-B",
+    "Variation_Type": " Color",
+    "Variation_Detail": " Silver"
+  }
+]

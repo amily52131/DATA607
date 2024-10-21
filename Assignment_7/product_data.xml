@@ -1,0 +1,403 @@
+<?xml version="1.0"?>
+<Products>
+  <Product>
+    <Category>Electronics</Category>
+    <Item_Name>Smartphone</Item_Name>
+    <Item_ID>101</Item_ID>
+    <Brand>TechBrand</Brand>
+    <Price>699.99</Price>
+    <Variation_ID>101-A</Variation_ID>
+    <Variation_Type>Color</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Electronics</Category>
+    <Item_Name>Smartphone</Item_Name>
+    <Item_ID>101</Item_ID>
+    <Brand>TechBrand</Brand>
+    <Price>699.99</Price>
+    <Variation_ID>101-A</Variation_ID>
+    <Variation_Type> Storage</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Electronics</Category>
+    <Item_Name>Smartphone</Item_Name>
+    <Item_ID>101</Item_ID>
+    <Brand>TechBrand</Brand>
+    <Price>699.99</Price>
+    <Variation_ID>101-B</Variation_ID>
+    <Variation_Type>Color</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Electronics</Category>
+    <Item_Name>Smartphone</Item_Name>
+    <Item_ID>101</Item_ID>
+    <Brand>TechBrand</Brand>
+    <Price>699.99</Price>
+    <Variation_ID>101-B</Variation_ID>
+    <Variation_Type> Storage</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Electronics</Category>
+    <Item_Name>Laptop</Item_Name>
+    <Item_ID>102</Item_ID>
+    <Brand>CompuBrand</Brand>
+    <Price>1099.99</Price>
+    <Variation_ID>102-A</Variation_ID>
+    <Variation_Type>Color</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Electronics</Category>
+    <Item_Name>Laptop</Item_Name>
+    <Item_ID>102</Item_ID>
+    <Brand>CompuBrand</Brand>
+    <Price>1099.99</Price>
+    <Variation_ID>102-A</Variation_ID>
+    <Variation_Type> Storage</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Electronics</Category>
+    <Item_Name>Laptop</Item_Name>
+    <Item_ID>102</Item_ID>
+    <Brand>CompuBrand</Brand>
+    <Price>1099.99</Price>
+    <Variation_ID>102-B</Variation_ID>
+    <Variation_Type>Color</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Electronics</Category>
+    <Item_Name>Laptop</Item_Name>
+    <Item_ID>102</Item_ID>
+    <Brand>CompuBrand</Brand>
+    <Price>1099.99</Price>
+    <Variation_ID>102-B</Variation_ID>
+    <Variation_Type> Storage</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Home Appliances</Category>
+    <Item_Name>Refrigerator</Item_Name>
+    <Item_ID>201</Item_ID>
+    <Brand>HomeCool</Brand>
+    <Price>899.99</Price>
+    <Variation_ID>201-A</Variation_ID>
+    <Variation_Type>Color</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Home Appliances</Category>
+    <Item_Name>Refrigerator</Item_Name>
+    <Item_ID>201</Item_ID>
+    <Brand>HomeCool</Brand>
+    <Price>899.99</Price>
+    <Variation_ID>201-A</Variation_ID>
+    <Variation_Type> Capacity</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Home Appliances</Category>
+    <Item_Name>Refrigerator</Item_Name>
+    <Item_ID>201</Item_ID>
+    <Brand>HomeCool</Brand>
+    <Price>899.99</Price>
+    <Variation_ID>201-B</Variation_ID>
+    <Variation_Type>Color</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Home Appliances</Category>
+    <Item_Name>Refrigerator</Item_Name>
+    <Item_ID>201</Item_ID>
+    <Brand>HomeCool</Brand>
+    <Price>899.99</Price>
+    <Variation_ID>201-B</Variation_ID>
+    <Variation_Type> Capacity</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Home Appliances</Category>
+    <Item_Name>Washing Machine</Item_Name>
+    <Item_ID>202</Item_ID>
+    <Brand>CleanTech</Brand>
+    <Price>499.99</Price>
+    <Variation_ID>202-A</Variation_ID>
+    <Variation_Type>Type</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Home Appliances</Category>
+    <Item_Name>Washing Machine</Item_Name>
+    <Item_ID>202</Item_ID>
+    <Brand>CleanTech</Brand>
+    <Price>499.99</Price>
+    <Variation_ID>202-A</Variation_ID>
+    <Variation_Type> Capacity</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Home Appliances</Category>
+    <Item_Name>Washing Machine</Item_Name>
+    <Item_ID>202</Item_ID>
+    <Brand>CleanTech</Brand>
+    <Price>499.99</Price>
+    <Variation_ID>202-B</Variation_ID>
+    <Variation_Type>Type</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Home Appliances</Category>
+    <Item_Name>Washing Machine</Item_Name>
+    <Item_ID>202</Item_ID>
+    <Brand>CleanTech</Brand>
+    <Price>499.99</Price>
+    <Variation_ID>202-B</Variation_ID>
+    <Variation_Type> Capacity</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Clothing</Category>
+    <Item_Name>T-Shirt</Item_Name>
+    <Item_ID>301</Item_ID>
+    <Brand>FashionCo</Brand>
+    <Price>19.99</Price>
+    <Variation_ID>301-A</Variation_ID>
+    <Variation_Type>Color</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Clothing</Category>
+    <Item_Name>T-Shirt</Item_Name>
+    <Item_ID>301</Item_ID>
+    <Brand>FashionCo</Brand>
+    <Price>19.99</Price>
+    <Variation_ID>301-A</Variation_ID>
+    <Variation_Type> Size</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Clothing</Category>
+    <Item_Name>T-Shirt</Item_Name>
+    <Item_ID>301</Item_ID>
+    <Brand>FashionCo</Brand>
+    <Price>19.99</Price>
+    <Variation_ID>301-B</Variation_ID>
+    <Variation_Type>Color</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Clothing</Category>
+    <Item_Name>T-Shirt</Item_Name>
+    <Item_ID>301</Item_ID>
+    <Brand>FashionCo</Brand>
+    <Price>19.99</Price>
+    <Variation_ID>301-B</Variation_ID>
+    <Variation_Type> Size</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Clothing</Category>
+    <Item_Name>T-Shirt</Item_Name>
+    <Item_ID>301</Item_ID>
+    <Brand>FashionCo</Brand>
+    <Price>19.99</Price>
+    <Variation_ID>301-C</Variation_ID>
+    <Variation_Type>Color</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Clothing</Category>
+    <Item_Name>T-Shirt</Item_Name>
+    <Item_ID>301</Item_ID>
+    <Brand>FashionCo</Brand>
+    <Price>19.99</Price>
+    <Variation_ID>301-C</Variation_ID>
+    <Variation_Type> Size</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Clothing</Category>
+    <Item_Name>Jeans</Item_Name>
+    <Item_ID>302</Item_ID>
+    <Brand>DenimWorks</Brand>
+    <Price>49.99</Price>
+    <Variation_ID>302-A</Variation_ID>
+    <Variation_Type>Color</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Clothing</Category>
+    <Item_Name>Jeans</Item_Name>
+    <Item_ID>302</Item_ID>
+    <Brand>DenimWorks</Brand>
+    <Price>49.99</Price>
+    <Variation_ID>302-A</Variation_ID>
+    <Variation_Type> Size</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Clothing</Category>
+    <Item_Name>Jeans</Item_Name>
+    <Item_ID>302</Item_ID>
+    <Brand>DenimWorks</Brand>
+    <Price>49.99</Price>
+    <Variation_ID>302-B</Variation_ID>
+    <Variation_Type>Color</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Clothing</Category>
+    <Item_Name>Jeans</Item_Name>
+    <Item_ID>302</Item_ID>
+    <Brand>DenimWorks</Brand>
+    <Price>49.99</Price>
+    <Variation_ID>302-B</Variation_ID>
+    <Variation_Type> Size</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Books</Category>
+    <Item_Name>Fiction Novel</Item_Name>
+    <Item_ID>401</Item_ID>
+    <Brand>-</Brand>
+    <Price>14.99</Price>
+    <Variation_ID>401-A</Variation_ID>
+    <Variation_Type>Format</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Books</Category>
+    <Item_Name>Fiction Novel</Item_Name>
+    <Item_ID>401</Item_ID>
+    <Brand>-</Brand>
+    <Price>14.99</Price>
+    <Variation_ID>401-A</Variation_ID>
+    <Variation_Type> Language</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Books</Category>
+    <Item_Name>Fiction Novel</Item_Name>
+    <Item_ID>401</Item_ID>
+    <Brand>-</Brand>
+    <Price>14.99</Price>
+    <Variation_ID>401-B</Variation_ID>
+    <Variation_Type>Format</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Books</Category>
+    <Item_Name>Fiction Novel</Item_Name>
+    <Item_ID>401</Item_ID>
+    <Brand>-</Brand>
+    <Price>14.99</Price>
+    <Variation_ID>401-B</Variation_ID>
+    <Variation_Type> Language</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Books</Category>
+    <Item_Name>Non-Fiction Guide</Item_Name>
+    <Item_ID>402</Item_ID>
+    <Brand>-</Brand>
+    <Price>24.99</Price>
+    <Variation_ID>402-A</Variation_ID>
+    <Variation_Type>Format</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Books</Category>
+    <Item_Name>Non-Fiction Guide</Item_Name>
+    <Item_ID>402</Item_ID>
+    <Brand>-</Brand>
+    <Price>24.99</Price>
+    <Variation_ID>402-A</Variation_ID>
+    <Variation_Type> Language</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Books</Category>
+    <Item_Name>Non-Fiction Guide</Item_Name>
+    <Item_ID>402</Item_ID>
+    <Brand>-</Brand>
+    <Price>24.99</Price>
+    <Variation_ID>402-B</Variation_ID>
+    <Variation_Type>Format</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Books</Category>
+    <Item_Name>Non-Fiction Guide</Item_Name>
+    <Item_ID>402</Item_ID>
+    <Brand>-</Brand>
+    <Price>24.99</Price>
+    <Variation_ID>402-B</Variation_ID>
+    <Variation_Type> Language</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Sports Equipment</Category>
+    <Item_Name>Basketball</Item_Name>
+    <Item_ID>501</Item_ID>
+    <Brand>SportsGear</Brand>
+    <Price>29.99</Price>
+    <Variation_ID>501-A</Variation_ID>
+    <Variation_Type>Size</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Sports Equipment</Category>
+    <Item_Name>Basketball</Item_Name>
+    <Item_ID>501</Item_ID>
+    <Brand>SportsGear</Brand>
+    <Price>29.99</Price>
+    <Variation_ID>501-A</Variation_ID>
+    <Variation_Type> Color</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Sports Equipment</Category>
+    <Item_Name>Tennis Racket</Item_Name>
+    <Item_ID>502</Item_ID>
+    <Brand>RacketPro</Brand>
+    <Price>89.99</Price>
+    <Variation_ID>502-A</Variation_ID>
+    <Variation_Type>Material</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Sports Equipment</Category>
+    <Item_Name>Tennis Racket</Item_Name>
+    <Item_ID>502</Item_ID>
+    <Brand>RacketPro</Brand>
+    <Price>89.99</Price>
+    <Variation_ID>502-A</Variation_ID>
+    <Variation_Type> Color</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Sports Equipment</Category>
+    <Item_Name>Tennis Racket</Item_Name>
+    <Item_ID>502</Item_ID>
+    <Brand>RacketPro</Brand>
+    <Price>89.99</Price>
+    <Variation_ID>502-B</Variation_ID>
+    <Variation_Type>Material</Variation_Type>
+    <Variation_Details/>
+  </Product>
+  <Product>
+    <Category>Sports Equipment</Category>
+    <Item_Name>Tennis Racket</Item_Name>
+    <Item_ID>502</Item_ID>
+    <Brand>RacketPro</Brand>
+    <Price>89.99</Price>
+    <Variation_ID>502-B</Variation_ID>
+    <Variation_Type> Color</Variation_Type>
+    <Variation_Details/>
+  </Product>
+</Products>

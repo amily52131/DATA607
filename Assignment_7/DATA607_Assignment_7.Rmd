@@ -1,0 +1,125 @@
+---
+title: "Assignment_7"
+author: "Ying Fang Lee"
+date: "2024-10-20"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+```
+### Uploading the information as a csv file to Github then read it as a dataframe with R
+I choose to tidyup the data before I create data files thinking it will be easier to read.
+```{r}
+# Read the csv file and clean the data into tidy form
+raw <- "https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Assignment_7/data.csv"
+products <- read.csv(raw)
+
+# Replace . in column name to _
+names(products) <- gsub("\\.","_", names(products))
+
+# Separate the additional Column "X" for details from table 1
+products_1 <- products %>%
+  select(-c(X))
+# Separate the Variation_Details column from X and rename X to Variation Details
+products_2 <- products %>%
+  select(-c(Variation_Details)) %>% 
+  rename(Variation_Details = X)
+# Combine table 1 and table two and separate the Variation_Details to two columns by :
+products <- rbind(products_1, products_2) %>% 
+  separate(Variation_Details, into = c("Variation_Type", "Variation_Detail"), sep = ":") %>% 
+  arrange(Variation_ID) 
+head(products)
+```
+
+## Create JSON, HTML, XML and Parquet with R
+### Creating HTML file with the csv file as a table
+```{r}
+# Create HTML file with the content as a table
+
+library(htmltools)
+# Create HTML content
+html_content <- tags$html(
+  tags$body(
+    tags$table(
+      tags$thead(
+        tags$tr(
+          tags$th("Category"),
+          tags$th("Item Name"),
+          tags$th("Item ID"),
+          tags$th("Brand"),
+          tags$th("Price"),
+          tags$th("Variation ID"),
+          tags$th("Variation Type"),
+          tags$th("Variation Details")
+        )
+      ),
+      tags$tbody(
+        lapply(1:nrow(products), function(i) {
+          tags$tr(
+            tags$td(products$Category[i]),
+            tags$td(products$Item_Name[i]),
+            tags$td(products$Item_ID[i]),
+            tags$td(products$Brand[i]),
+            tags$td(products$Price[i]),
+            tags$td(products$Variation_ID[i]),
+            tags$td(products$Variation_Type[i]),
+            tags$td(products$Variation_Detail[i])
+          )
+        })
+      )
+    )
+  )
+)
+
+# Save the HTML file
+save_html(html_content, "product_data_report.html")
+```
+
+### Creating JSON file with the csv file as a table
+```{r}
+# Create JSON file with the content from the data frame created from csv
+library(jsonlite)
+
+# Convert to JSON
+json_data <- toJSON(products, pretty = TRUE)
+
+# Save the JSON file
+write(json_data, "product_data.json")
+```
+
+### Creating XML file with the csv file as a table
+```{r}
+# Create XML file wit hthe content from the data frame created from csv
+library(XML)
+# Create the XML document
+xml_doc <- newXMLDoc()
+
+# Create root node
+root <- newXMLNode("Products", doc = xml_doc)
+
+# Add product entries
+for (i in 1:nrow(products)) {
+  product_node <- newXMLNode("Product", parent = root)
+  newXMLNode("Category", products$Category[i], parent = product_node)
+  newXMLNode("Item_Name", products$Item_Name[i], parent = product_node)
+  newXMLNode("Item_ID", products$Item_ID[i], parent = product_node)
+  newXMLNode("Brand", products$Brand[i], parent = product_node)
+  newXMLNode("Price", products$Price[i], parent = product_node)
+  newXMLNode("Variation_ID", products$Variation_ID[i], parent = product_node)
+  newXMLNode("Variation_Type", products$Variation_Type[i], parent = product_node)
+  newXMLNode("Variation_Details", products$Variation_Details[i], parent = product_node)
+}
+# Save the XML file
+saveXML(xml_doc, file = "product_data.xml")
+```
+
+### Creating pqrquet file with the csv file as a table
+
+```{r}
+# Create XML file wit hthe content from the data frame created from csv
+library(arrow)
+# Write parquet file with dataframe
+write_parquet(products,"product_data.parquet")
+```
+

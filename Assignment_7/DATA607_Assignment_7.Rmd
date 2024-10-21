@@ -76,7 +76,7 @@ html_content <- tags$html(
 save_html(html_content, "product_data_report.html")
 ```
 
-### Creating JSON file with the csv file as a table
+### Creating JSON file with the csv file
 ```{r}
 # Create JSON file with the content from the data frame created from csv
 library(jsonlite)
@@ -88,9 +88,9 @@ json_data <- toJSON(products, pretty = TRUE)
 write(json_data, "product_data.json")
 ```
 
-### Creating XML file with the csv file as a table
+### Creating XML file with the csv file
 ```{r}
-# Create XML file wit hthe content from the data frame created from csv
+# Create XML file with the content from the data frame created from csv
 library(XML)
 # Create the XML document
 xml_doc <- newXMLDoc()
@@ -114,12 +114,39 @@ for (i in 1:nrow(products)) {
 saveXML(xml_doc, file = "product_data.xml")
 ```
 
-### Creating pqrquet file with the csv file as a table
+### Creating pqrquet file with the csv file
 
 ```{r}
-# Create XML file wit hthe content from the data frame created from csv
+# Create XML file with the content from the data frame created from csv
 library(arrow)
 # Write parquet file with dataframe
 write_parquet(products,"product_data.parquet")
+```
+## Reading JSON, HTML, XML, parquet files
+
+```{r}
+# Reading HTML file
+library(rvest)
+raw <- "https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Assignment_7/product_data_report.html"
+html_file <- read_html(raw)
+
+# Locates the table element and converts it to data frame
+table <- html_file %>% 
+  html_node("table") %>%
+  html_table()
+
+print(table)
+
+```
+
+```{r}
+# Reading JSON file
+library(jsonlite)
+raw <- "https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Assignment_7/product_data.json"
+
+products_json <- fromJSON(raw)
+print(products_json)
+
+
 ```
 

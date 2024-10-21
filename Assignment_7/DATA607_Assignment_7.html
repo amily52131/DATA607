@@ -451,8 +451,8 @@ html_content &lt;- tags$html(
 # Save the HTML file
 save_html(html_content, &quot;product_data_report.html&quot;)</code></pre>
 </div>
-<div id="creating-json-file-with-the-csv-file-as-a-table" class="section level3">
-<h3>Creating JSON file with the csv file as a table</h3>
+<div id="creating-json-file-with-the-csv-file" class="section level3">
+<h3>Creating JSON file with the csv file</h3>
 <pre class="r"><code># Create JSON file with the content from the data frame created from csv
 library(jsonlite)</code></pre>
 <pre><code>## 
@@ -466,9 +466,9 @@ json_data &lt;- toJSON(products, pretty = TRUE)
 # Save the JSON file
 write(json_data, &quot;product_data.json&quot;)</code></pre>
 </div>
-<div id="creating-xml-file-with-the-csv-file-as-a-table" class="section level3">
-<h3>Creating XML file with the csv file as a table</h3>
-<pre class="r"><code># Create XML file wit hthe content from the data frame created from csv
+<div id="creating-xml-file-with-the-csv-file" class="section level3">
+<h3>Creating XML file with the csv file</h3>
+<pre class="r"><code># Create XML file with the content from the data frame created from csv
 library(XML)
 # Create the XML document
 xml_doc &lt;- newXMLDoc()
@@ -492,9 +492,9 @@ for (i in 1:nrow(products)) {
 saveXML(xml_doc, file = &quot;product_data.xml&quot;)</code></pre>
 <pre><code>## [1] &quot;product_data.xml&quot;</code></pre>
 </div>
-<div id="creating-pqrquet-file-with-the-csv-file-as-a-table" class="section level3">
-<h3>Creating pqrquet file with the csv file as a table</h3>
-<pre class="r"><code># Create XML file wit hthe content from the data frame created from csv
+<div id="creating-pqrquet-file-with-the-csv-file" class="section level3">
+<h3>Creating pqrquet file with the csv file</h3>
+<pre class="r"><code># Create XML file with the content from the data frame created from csv
 library(arrow)</code></pre>
 <pre><code>## 
 ## Attaching package: &#39;arrow&#39;</code></pre>
@@ -507,6 +507,128 @@ library(arrow)</code></pre>
 <pre class="r"><code># Write parquet file with dataframe
 write_parquet(products,&quot;product_data.parquet&quot;)</code></pre>
 </div>
+</div>
+<div id="reading-json-html-xml-parquet-files" class="section level2">
+<h2>Reading JSON, HTML, XML, parquet files</h2>
+<pre class="r"><code># Reading HTML file
+library(rvest)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;rvest&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:readr&#39;:
+## 
+##     guess_encoding</code></pre>
+<pre class="r"><code>raw &lt;- &quot;https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Assignment_7/product_data_report.html&quot;
+html_file &lt;- read_html(raw)
+
+# Locates the table element and converts it to data frame
+table &lt;- html_file %&gt;% 
+  html_node(&quot;table&quot;) %&gt;%
+  html_table()
+
+print(table)</code></pre>
+<pre><code>## # A tibble: 40 × 8
+##    Category    `Item Name` `Item ID` Brand Price `Variation ID` `Variation Type`
+##    &lt;chr&gt;       &lt;chr&gt;           &lt;int&gt; &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;           
+##  1 Electronics Smartphone        101 Tech…  700. 101-A          Color           
+##  2 Electronics Smartphone        101 Tech…  700. 101-A          Storage         
+##  3 Electronics Smartphone        101 Tech…  700. 101-B          Color           
+##  4 Electronics Smartphone        101 Tech…  700. 101-B          Storage         
+##  5 Electronics Laptop            102 Comp… 1100. 102-A          Color           
+##  6 Electronics Laptop            102 Comp… 1100. 102-A          Storage         
+##  7 Electronics Laptop            102 Comp… 1100. 102-B          Color           
+##  8 Electronics Laptop            102 Comp… 1100. 102-B          Storage         
+##  9 Home Appli… Refrigerat…       201 Home…  900. 201-A          Color           
+## 10 Home Appli… Refrigerat…       201 Home…  900. 201-A          Capacity        
+## # ℹ 30 more rows
+## # ℹ 1 more variable: `Variation Details` &lt;chr&gt;</code></pre>
+<pre class="r"><code># Reading JSON file
+library(jsonlite)
+raw &lt;- &quot;https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Assignment_7/product_data.json&quot;
+
+products_json &lt;- fromJSON(raw)
+print(products_json)</code></pre>
+<pre><code>##            Category         Item_Name Item_ID      Brand   Price Variation_ID
+## 1       Electronics        Smartphone     101  TechBrand  699.99        101-A
+## 2       Electronics        Smartphone     101  TechBrand  699.99        101-A
+## 3       Electronics        Smartphone     101  TechBrand  699.99        101-B
+## 4       Electronics        Smartphone     101  TechBrand  699.99        101-B
+## 5       Electronics            Laptop     102 CompuBrand 1099.99        102-A
+## 6       Electronics            Laptop     102 CompuBrand 1099.99        102-A
+## 7       Electronics            Laptop     102 CompuBrand 1099.99        102-B
+## 8       Electronics            Laptop     102 CompuBrand 1099.99        102-B
+## 9   Home Appliances      Refrigerator     201   HomeCool  899.99        201-A
+## 10  Home Appliances      Refrigerator     201   HomeCool  899.99        201-A
+## 11  Home Appliances      Refrigerator     201   HomeCool  899.99        201-B
+## 12  Home Appliances      Refrigerator     201   HomeCool  899.99        201-B
+## 13  Home Appliances   Washing Machine     202  CleanTech  499.99        202-A
+## 14  Home Appliances   Washing Machine     202  CleanTech  499.99        202-A
+## 15  Home Appliances   Washing Machine     202  CleanTech  499.99        202-B
+## 16  Home Appliances   Washing Machine     202  CleanTech  499.99        202-B
+## 17         Clothing           T-Shirt     301  FashionCo   19.99        301-A
+## 18         Clothing           T-Shirt     301  FashionCo   19.99        301-A
+## 19         Clothing           T-Shirt     301  FashionCo   19.99        301-B
+## 20         Clothing           T-Shirt     301  FashionCo   19.99        301-B
+## 21         Clothing           T-Shirt     301  FashionCo   19.99        301-C
+## 22         Clothing           T-Shirt     301  FashionCo   19.99        301-C
+## 23         Clothing             Jeans     302 DenimWorks   49.99        302-A
+## 24         Clothing             Jeans     302 DenimWorks   49.99        302-A
+## 25         Clothing             Jeans     302 DenimWorks   49.99        302-B
+## 26         Clothing             Jeans     302 DenimWorks   49.99        302-B
+## 27            Books     Fiction Novel     401          -   14.99        401-A
+## 28            Books     Fiction Novel     401          -   14.99        401-A
+## 29            Books     Fiction Novel     401          -   14.99        401-B
+## 30            Books     Fiction Novel     401          -   14.99        401-B
+## 31            Books Non-Fiction Guide     402          -   24.99        402-A
+## 32            Books Non-Fiction Guide     402          -   24.99        402-A
+## 33            Books Non-Fiction Guide     402          -   24.99        402-B
+## 34            Books Non-Fiction Guide     402          -   24.99        402-B
+## 35 Sports Equipment        Basketball     501 SportsGear   29.99        501-A
+## 36 Sports Equipment        Basketball     501 SportsGear   29.99        501-A
+## 37 Sports Equipment     Tennis Racket     502  RacketPro   89.99        502-A
+## 38 Sports Equipment     Tennis Racket     502  RacketPro   89.99        502-A
+## 39 Sports Equipment     Tennis Racket     502  RacketPro   89.99        502-B
+## 40 Sports Equipment     Tennis Racket     502  RacketPro   89.99        502-B
+##    Variation_Type Variation_Detail
+## 1           Color            Black
+## 2         Storage             64GB
+## 3           Color            White
+## 4         Storage            128GB
+## 5           Color           Silver
+## 6         Storage            256GB
+## 7           Color       Space Gray
+## 8         Storage            512GB
+## 9           Color  Stainless Steel
+## 10       Capacity         20 cu ft
+## 11          Color            White
+## 12       Capacity         18 cu ft
+## 13           Type       Front Load
+## 14       Capacity        4.5 cu ft
+## 15           Type         Top Load
+## 16       Capacity        5.0 cu ft
+## 17          Color             Blue
+## 18           Size                S
+## 19          Color              Red
+## 20           Size                M
+## 21          Color            Green
+## 22           Size                L
+## 23          Color        Dark Blue
+## 24           Size               32
+## 25          Color       Light Blue
+## 26           Size               34
+## 27         Format        Hardcover
+## 28       Language          English
+## 29         Format        Paperback
+## 30       Language          Spanish
+## 31         Format            eBook
+## 32       Language          English
+## 33         Format        Paperback
+## 34       Language           French
+## 35           Size           Size 7
+## 36          Color           Orange
+## 37       Material         Graphite
+## 38          Color            Black
+## 39       Material         Aluminum
+## 40          Color           Silver</code></pre>
 </div>
 
 

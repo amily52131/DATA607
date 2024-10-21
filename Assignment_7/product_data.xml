@@ -8,7 +8,7 @@
     <Price>699.99</Price>
     <Variation_ID>101-A</Variation_ID>
     <Variation_Type>Color</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> Black</Variation_Details>
   </Product>
   <Product>
     <Category>Electronics</Category>
@@ -18,7 +18,7 @@
     <Price>699.99</Price>
     <Variation_ID>101-A</Variation_ID>
     <Variation_Type> Storage</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> 64GB</Variation_Details>
   </Product>
   <Product>
     <Category>Electronics</Category>
@@ -28,7 +28,7 @@
     <Price>699.99</Price>
     <Variation_ID>101-B</Variation_ID>
     <Variation_Type>Color</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> White</Variation_Details>
   </Product>
   <Product>
     <Category>Electronics</Category>
@@ -38,7 +38,7 @@
     <Price>699.99</Price>
     <Variation_ID>101-B</Variation_ID>
     <Variation_Type> Storage</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> 128GB</Variation_Details>
   </Product>
   <Product>
     <Category>Electronics</Category>
@@ -48,7 +48,7 @@
     <Price>1099.99</Price>
     <Variation_ID>102-A</Variation_ID>
     <Variation_Type>Color</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> Silver</Variation_Details>
   </Product>
   <Product>
     <Category>Electronics</Category>
@@ -58,7 +58,7 @@
     <Price>1099.99</Price>
     <Variation_ID>102-A</Variation_ID>
     <Variation_Type> Storage</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> 256GB</Variation_Details>
   </Product>
   <Product>
     <Category>Electronics</Category>
@@ -68,7 +68,7 @@
     <Price>1099.99</Price>
     <Variation_ID>102-B</Variation_ID>
     <Variation_Type>Color</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> Space Gray</Variation_Details>
   </Product>
   <Product>
     <Category>Electronics</Category>
@@ -78,7 +78,7 @@
     <Price>1099.99</Price>
     <Variation_ID>102-B</Variation_ID>
     <Variation_Type> Storage</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> 512GB</Variation_Details>
   </Product>
   <Product>
     <Category>Home Appliances</Category>
@@ -88,7 +88,7 @@
     <Price>899.99</Price>
     <Variation_ID>201-A</Variation_ID>
     <Variation_Type>Color</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> Stainless Steel</Variation_Details>
   </Product>
   <Product>
     <Category>Home Appliances</Category>
@@ -98,7 +98,7 @@
     <Price>899.99</Price>
     <Variation_ID>201-A</Variation_ID>
     <Variation_Type> Capacity</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> 20 cu ft</Variation_Details>
   </Product>
   <Product>
     <Category>Home Appliances</Category>
@@ -108,7 +108,7 @@
     <Price>899.99</Price>
     <Variation_ID>201-B</Variation_ID>
     <Variation_Type>Color</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> White</Variation_Details>
   </Product>
   <Product>
     <Category>Home Appliances</Category>
@@ -118,7 +118,7 @@
     <Price>899.99</Price>
     <Variation_ID>201-B</Variation_ID>
     <Variation_Type> Capacity</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> 18 cu ft</Variation_Details>
   </Product>
   <Product>
     <Category>Home Appliances</Category>
@@ -128,7 +128,7 @@
     <Price>499.99</Price>
     <Variation_ID>202-A</Variation_ID>
     <Variation_Type>Type</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> Front Load</Variation_Details>
   </Product>
   <Product>
     <Category>Home Appliances</Category>
@@ -138,7 +138,7 @@
     <Price>499.99</Price>
     <Variation_ID>202-A</Variation_ID>
     <Variation_Type> Capacity</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> 4.5 cu ft</Variation_Details>
   </Product>
   <Product>
     <Category>Home Appliances</Category>
@@ -148,7 +148,7 @@
     <Price>499.99</Price>
     <Variation_ID>202-B</Variation_ID>
     <Variation_Type>Type</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> Top Load</Variation_Details>
   </Product>
   <Product>
     <Category>Home Appliances</Category>
@@ -158,7 +158,7 @@
     <Price>499.99</Price>
     <Variation_ID>202-B</Variation_ID>
     <Variation_Type> Capacity</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> 5.0 cu ft</Variation_Details>
   </Product>
   <Product>
     <Category>Clothing</Category>
@@ -168,7 +168,7 @@
     <Price>19.99</Price>
     <Variation_ID>301-A</Variation_ID>
     <Variation_Type>Color</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> Blue</Variation_Details>
   </Product>
   <Product>
     <Category>Clothing</Category>
@@ -178,7 +178,7 @@
     <Price>19.99</Price>
     <Variation_ID>301-A</Variation_ID>
     <Variation_Type> Size</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> S</Variation_Details>
   </Product>
   <Product>
     <Category>Clothing</Category>
@@ -188,7 +188,7 @@
     <Price>19.99</Price>
     <Variation_ID>301-B</Variation_ID>
     <Variation_Type>Color</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> Red</Variation_Details>
   </Product>
   <Product>
     <Category>Clothing</Category>
@@ -198,7 +198,7 @@
     <Price>19.99</Price>
     <Variation_ID>301-B</Variation_ID>
     <Variation_Type> Size</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> M</Variation_Details>
   </Product>
   <Product>
     <Category>Clothing</Category>
@@ -208,7 +208,7 @@
     <Price>19.99</Price>
     <Variation_ID>301-C</Variation_ID>
     <Variation_Type>Color</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> Green</Variation_Details>
   </Product>
   <Product>
     <Category>Clothing</Category>
@@ -218,7 +218,7 @@
     <Price>19.99</Price>
     <Variation_ID>301-C</Variation_ID>
     <Variation_Type> Size</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> L</Variation_Details>
   </Product>
   <Product>
     <Category>Clothing</Category>
@@ -228,7 +228,7 @@
     <Price>49.99</Price>
     <Variation_ID>302-A</Variation_ID>
     <Variation_Type>Color</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> Dark Blue</Variation_Details>
   </Product>
   <Product>
     <Category>Clothing</Category>
@@ -238,7 +238,7 @@
     <Price>49.99</Price>
     <Variation_ID>302-A</Variation_ID>
     <Variation_Type> Size</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> 32</Variation_Details>
   </Product>
   <Product>
     <Category>Clothing</Category>
@@ -248,7 +248,7 @@
     <Price>49.99</Price>
     <Variation_ID>302-B</Variation_ID>
     <Variation_Type>Color</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> Light Blue</Variation_Details>
   </Product>
   <Product>
     <Category>Clothing</Category>
@@ -258,7 +258,7 @@
     <Price>49.99</Price>
     <Variation_ID>302-B</Variation_ID>
     <Variation_Type> Size</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> 34</Variation_Details>
   </Product>
   <Product>
     <Category>Books</Category>
@@ -268,7 +268,7 @@
     <Price>14.99</Price>
     <Variation_ID>401-A</Variation_ID>
     <Variation_Type>Format</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> Hardcover</Variation_Details>
   </Product>
   <Product>
     <Category>Books</Category>
@@ -278,7 +278,7 @@
     <Price>14.99</Price>
     <Variation_ID>401-A</Variation_ID>
     <Variation_Type> Language</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> English</Variation_Details>
   </Product>
   <Product>
     <Category>Books</Category>
@@ -288,7 +288,7 @@
     <Price>14.99</Price>
     <Variation_ID>401-B</Variation_ID>
     <Variation_Type>Format</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> Paperback</Variation_Details>
   </Product>
   <Product>
     <Category>Books</Category>
@@ -298,7 +298,7 @@
     <Price>14.99</Price>
     <Variation_ID>401-B</Variation_ID>
     <Variation_Type> Language</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> Spanish</Variation_Details>
   </Product>
   <Product>
     <Category>Books</Category>
@@ -308,7 +308,7 @@
     <Price>24.99</Price>
     <Variation_ID>402-A</Variation_ID>
     <Variation_Type>Format</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> eBook</Variation_Details>
   </Product>
   <Product>
     <Category>Books</Category>
@@ -318,7 +318,7 @@
     <Price>24.99</Price>
     <Variation_ID>402-A</Variation_ID>
     <Variation_Type> Language</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> English</Variation_Details>
   </Product>
   <Product>
     <Category>Books</Category>
@@ -328,7 +328,7 @@
     <Price>24.99</Price>
     <Variation_ID>402-B</Variation_ID>
     <Variation_Type>Format</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> Paperback</Variation_Details>
   </Product>
   <Product>
     <Category>Books</Category>
@@ -338,7 +338,7 @@
     <Price>24.99</Price>
     <Variation_ID>402-B</Variation_ID>
     <Variation_Type> Language</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> French</Variation_Details>
   </Product>
   <Product>
     <Category>Sports Equipment</Category>
@@ -348,7 +348,7 @@
     <Price>29.99</Price>
     <Variation_ID>501-A</Variation_ID>
     <Variation_Type>Size</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> Size 7</Variation_Details>
   </Product>
   <Product>
     <Category>Sports Equipment</Category>
@@ -358,7 +358,7 @@
     <Price>29.99</Price>
     <Variation_ID>501-A</Variation_ID>
     <Variation_Type> Color</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> Orange</Variation_Details>
   </Product>
   <Product>
     <Category>Sports Equipment</Category>
@@ -368,7 +368,7 @@
     <Price>89.99</Price>
     <Variation_ID>502-A</Variation_ID>
     <Variation_Type>Material</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> Graphite</Variation_Details>
   </Product>
   <Product>
     <Category>Sports Equipment</Category>
@@ -378,7 +378,7 @@
     <Price>89.99</Price>
     <Variation_ID>502-A</Variation_ID>
     <Variation_Type> Color</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> Black</Variation_Details>
   </Product>
   <Product>
     <Category>Sports Equipment</Category>
@@ -388,7 +388,7 @@
     <Price>89.99</Price>
     <Variation_ID>502-B</Variation_ID>
     <Variation_Type>Material</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> Aluminum</Variation_Details>
   </Product>
   <Product>
     <Category>Sports Equipment</Category>
@@ -398,6 +398,6 @@
     <Price>89.99</Price>
     <Variation_ID>502-B</Variation_ID>
     <Variation_Type> Color</Variation_Type>
-    <Variation_Details/>
+    <Variation_Details> Silver</Variation_Details>
   </Product>
 </Products>

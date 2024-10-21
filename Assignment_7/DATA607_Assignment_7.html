@@ -486,7 +486,7 @@ for (i in 1:nrow(products)) {
   newXMLNode(&quot;Price&quot;, products$Price[i], parent = product_node)
   newXMLNode(&quot;Variation_ID&quot;, products$Variation_ID[i], parent = product_node)
   newXMLNode(&quot;Variation_Type&quot;, products$Variation_Type[i], parent = product_node)
-  newXMLNode(&quot;Variation_Details&quot;, products$Variation_Details[i], parent = product_node)
+  newXMLNode(&quot;Variation_Details&quot;, products$Variation_Detail[i], parent = product_node)
 }
 # Save the XML file
 saveXML(xml_doc, file = &quot;product_data.xml&quot;)</code></pre>
@@ -510,6 +510,8 @@ write_parquet(products,&quot;product_data.parquet&quot;)</code></pre>
 </div>
 <div id="reading-json-html-xml-parquet-files" class="section level2">
 <h2>Reading JSON, HTML, XML, parquet files</h2>
+<div id="reading-html-file" class="section level3">
+<h3>Reading HTML file</h3>
 <pre class="r"><code># Reading HTML file
 library(rvest)</code></pre>
 <pre><code>## 
@@ -521,11 +523,11 @@ library(rvest)</code></pre>
 html_file &lt;- read_html(raw)
 
 # Locates the table element and converts it to data frame
-table &lt;- html_file %&gt;% 
+product_html &lt;- html_file %&gt;% 
   html_node(&quot;table&quot;) %&gt;%
   html_table()
 
-print(table)</code></pre>
+print(product_html)</code></pre>
 <pre><code>## # A tibble: 40 × 8
 ##    Category    `Item Name` `Item ID` Brand Price `Variation ID` `Variation Type`
 ##    &lt;chr&gt;       &lt;chr&gt;           &lt;int&gt; &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;           
@@ -541,6 +543,9 @@ print(table)</code></pre>
 ## 10 Home Appli… Refrigerat…       201 Home…  900. 201-A          Capacity        
 ## # ℹ 30 more rows
 ## # ℹ 1 more variable: `Variation Details` &lt;chr&gt;</code></pre>
+</div>
+<div id="reading-json-file" class="section level3">
+<h3>Reading JSON file</h3>
 <pre class="r"><code># Reading JSON file
 library(jsonlite)
 raw &lt;- &quot;https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Assignment_7/product_data.json&quot;
@@ -629,6 +634,174 @@ print(products_json)</code></pre>
 ## 38          Color            Black
 ## 39       Material         Aluminum
 ## 40          Color           Silver</code></pre>
+</div>
+<div id="reading-xml-file" class="section level3">
+<h3>Reading XML file</h3>
+<pre class="r"><code># reading XML file
+library(xml2)
+
+raw &lt;- &quot;https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Assignment_7/product_data.xml&quot;
+xml_file &lt;- read_xml(raw)
+
+# Extract data from the XML
+products &lt;- xml_find_all(xml_file, &quot;.//Product&quot;)
+
+# Create a data frame to hold the extracted data
+product_xml &lt;- data.frame(
+  Category = xml_text(xml_find_all(products, &quot;Category&quot;)),
+  Item_Name = xml_text(xml_find_all(products, &quot;Item_Name&quot;)),
+  Item_ID = xml_text(xml_find_all(products, &quot;Item_ID&quot;)),
+  Brand = xml_text(xml_find_all(products, &quot;Brand&quot;)),
+  Price = as.numeric(xml_text(xml_find_all(products, &quot;Price&quot;))),
+  Variation_ID = xml_text(xml_find_all(products, &quot;Variation_ID&quot;)),
+  Variation_Type = xml_text(xml_find_all(products, &quot;Variation_Type&quot;)),
+  Variation_Details = xml_text(xml_find_all(products, &quot;Variation_Details&quot;)),
+  stringsAsFactors = FALSE
+)
+
+# View the data frame
+print(product_xml)</code></pre>
+<pre><code>##            Category         Item_Name Item_ID      Brand   Price Variation_ID
+## 1       Electronics        Smartphone     101  TechBrand  699.99        101-A
+## 2       Electronics        Smartphone     101  TechBrand  699.99        101-A
+## 3       Electronics        Smartphone     101  TechBrand  699.99        101-B
+## 4       Electronics        Smartphone     101  TechBrand  699.99        101-B
+## 5       Electronics            Laptop     102 CompuBrand 1099.99        102-A
+## 6       Electronics            Laptop     102 CompuBrand 1099.99        102-A
+## 7       Electronics            Laptop     102 CompuBrand 1099.99        102-B
+## 8       Electronics            Laptop     102 CompuBrand 1099.99        102-B
+## 9   Home Appliances      Refrigerator     201   HomeCool  899.99        201-A
+## 10  Home Appliances      Refrigerator     201   HomeCool  899.99        201-A
+## 11  Home Appliances      Refrigerator     201   HomeCool  899.99        201-B
+## 12  Home Appliances      Refrigerator     201   HomeCool  899.99        201-B
+## 13  Home Appliances   Washing Machine     202  CleanTech  499.99        202-A
+## 14  Home Appliances   Washing Machine     202  CleanTech  499.99        202-A
+## 15  Home Appliances   Washing Machine     202  CleanTech  499.99        202-B
+## 16  Home Appliances   Washing Machine     202  CleanTech  499.99        202-B
+## 17         Clothing           T-Shirt     301  FashionCo   19.99        301-A
+## 18         Clothing           T-Shirt     301  FashionCo   19.99        301-A
+## 19         Clothing           T-Shirt     301  FashionCo   19.99        301-B
+## 20         Clothing           T-Shirt     301  FashionCo   19.99        301-B
+## 21         Clothing           T-Shirt     301  FashionCo   19.99        301-C
+## 22         Clothing           T-Shirt     301  FashionCo   19.99        301-C
+## 23         Clothing             Jeans     302 DenimWorks   49.99        302-A
+## 24         Clothing             Jeans     302 DenimWorks   49.99        302-A
+## 25         Clothing             Jeans     302 DenimWorks   49.99        302-B
+## 26         Clothing             Jeans     302 DenimWorks   49.99        302-B
+## 27            Books     Fiction Novel     401          -   14.99        401-A
+## 28            Books     Fiction Novel     401          -   14.99        401-A
+## 29            Books     Fiction Novel     401          -   14.99        401-B
+## 30            Books     Fiction Novel     401          -   14.99        401-B
+## 31            Books Non-Fiction Guide     402          -   24.99        402-A
+## 32            Books Non-Fiction Guide     402          -   24.99        402-A
+## 33            Books Non-Fiction Guide     402          -   24.99        402-B
+## 34            Books Non-Fiction Guide     402          -   24.99        402-B
+## 35 Sports Equipment        Basketball     501 SportsGear   29.99        501-A
+## 36 Sports Equipment        Basketball     501 SportsGear   29.99        501-A
+## 37 Sports Equipment     Tennis Racket     502  RacketPro   89.99        502-A
+## 38 Sports Equipment     Tennis Racket     502  RacketPro   89.99        502-A
+## 39 Sports Equipment     Tennis Racket     502  RacketPro   89.99        502-B
+## 40 Sports Equipment     Tennis Racket     502  RacketPro   89.99        502-B
+##    Variation_Type Variation_Details
+## 1           Color             Black
+## 2         Storage              64GB
+## 3           Color             White
+## 4         Storage             128GB
+## 5           Color            Silver
+## 6         Storage             256GB
+## 7           Color        Space Gray
+## 8         Storage             512GB
+## 9           Color   Stainless Steel
+## 10       Capacity          20 cu ft
+## 11          Color             White
+## 12       Capacity          18 cu ft
+## 13           Type        Front Load
+## 14       Capacity         4.5 cu ft
+## 15           Type          Top Load
+## 16       Capacity         5.0 cu ft
+## 17          Color              Blue
+## 18           Size                 S
+## 19          Color               Red
+## 20           Size                 M
+## 21          Color             Green
+## 22           Size                 L
+## 23          Color         Dark Blue
+## 24           Size                32
+## 25          Color        Light Blue
+## 26           Size                34
+## 27         Format         Hardcover
+## 28       Language           English
+## 29         Format         Paperback
+## 30       Language           Spanish
+## 31         Format             eBook
+## 32       Language           English
+## 33         Format         Paperback
+## 34       Language            French
+## 35           Size            Size 7
+## 36          Color            Orange
+## 37       Material          Graphite
+## 38          Color             Black
+## 39       Material          Aluminum
+## 40          Color            Silver</code></pre>
+</div>
+<div id="reading-parquet-file" class="section level3">
+<h3>Reading parquet file</h3>
+<pre class="r"><code># Reading parquet file
+library(arrow)
+
+# Unable to generate the raw file from Github
+parquet_file &lt;- &quot;./product_data.parquet&quot;
+product_parquet &lt;- read_parquet(parquet_file)
+
+print(product_parquet)</code></pre>
+<pre><code>## # A tibble: 40 × 8
+##    Category        Item_Name    Item_ID Brand  Price Variation_ID Variation_Type
+##    &lt;chr&gt;           &lt;chr&gt;          &lt;int&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;         
+##  1 Electronics     Smartphone       101 TechB…  700. 101-A        &quot;Color&quot;       
+##  2 Electronics     Smartphone       101 TechB…  700. 101-A        &quot; Storage&quot;    
+##  3 Electronics     Smartphone       101 TechB…  700. 101-B        &quot;Color&quot;       
+##  4 Electronics     Smartphone       101 TechB…  700. 101-B        &quot; Storage&quot;    
+##  5 Electronics     Laptop           102 Compu… 1100. 102-A        &quot;Color&quot;       
+##  6 Electronics     Laptop           102 Compu… 1100. 102-A        &quot; Storage&quot;    
+##  7 Electronics     Laptop           102 Compu… 1100. 102-B        &quot;Color&quot;       
+##  8 Electronics     Laptop           102 Compu… 1100. 102-B        &quot; Storage&quot;    
+##  9 Home Appliances Refrigerator     201 HomeC…  900. 201-A        &quot;Color&quot;       
+## 10 Home Appliances Refrigerator     201 HomeC…  900. 201-A        &quot; Capacity&quot;   
+## # ℹ 30 more rows
+## # ℹ 1 more variable: Variation_Detail &lt;chr&gt;</code></pre>
+</div>
+</div>
+<div id="conclusion-json-html-xml-and-parquet-file" class="section level2">
+<h2>Conclusion JSON, HTML, XML, and parquet file</h2>
+<div id="html" class="section level3">
+<h3>HTML</h3>
+<p>HTML uses predefined tags to structure a web page. It has many more
+tags that describes webpage layout and not very suitable for data
+exchange. In general it will be harder to get data from HTML page since
+it contains other information that does not pertain to data.</p>
+</div>
+<div id="json" class="section level3">
+<h3>JSON</h3>
+<p>JSON files is commonly used by APIs its file size is smaller compared
+to XML but larger than csv files. JSON files is loaded completely into
+memory which makes it slower to read. However, it is easy for human to
+read and great for unstructured data.</p>
+</div>
+<div id="xml" class="section level3">
+<h3>XML</h3>
+<p>XML is a markup language designed for data representation and
+storage. It contains user defined tags that makes it versatile for
+application. XML can be used to represent complex data structures.
+However, XML file is in general larger than JSON file since it can
+contain a lot of information.</p>
+</div>
+<div id="parquet" class="section level3">
+<h3>Parquet</h3>
+<p>Parquet is a self-describing in that it includes metadata that
+includes the schema and structure of the file. It is one of the fastest
+file types to read, faster than JSON, and the file size is small.
+However, it is not easy to read like JSON files.</p>
+</div>
 </div>
 
 

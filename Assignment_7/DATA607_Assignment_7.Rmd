@@ -108,7 +108,7 @@ for (i in 1:nrow(products)) {
   newXMLNode("Price", products$Price[i], parent = product_node)
   newXMLNode("Variation_ID", products$Variation_ID[i], parent = product_node)
   newXMLNode("Variation_Type", products$Variation_Type[i], parent = product_node)
-  newXMLNode("Variation_Details", products$Variation_Details[i], parent = product_node)
+  newXMLNode("Variation_Details", products$Variation_Detail[i], parent = product_node)
 }
 # Save the XML file
 saveXML(xml_doc, file = "product_data.xml")
@@ -124,6 +124,7 @@ write_parquet(products,"product_data.parquet")
 ```
 ## Reading JSON, HTML, XML, parquet files
 
+### Reading HTML file
 ```{r}
 # Reading HTML file
 library(rvest)
@@ -131,14 +132,14 @@ raw <- "https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Ass
 html_file <- read_html(raw)
 
 # Locates the table element and converts it to data frame
-table <- html_file %>% 
+product_html <- html_file %>% 
   html_node("table") %>%
   html_table()
 
-print(table)
+print(product_html)
 
 ```
-
+### Reading JSON file
 ```{r}
 # Reading JSON file
 library(jsonlite)
@@ -149,4 +150,55 @@ print(products_json)
 
 
 ```
+### Reading XML file
+```{r}
+# reading XML file
+library(xml2)
 
+raw <- "https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Assignment_7/product_data.xml"
+xml_file <- read_xml(raw)
+
+# Extract data from the XML
+products <- xml_find_all(xml_file, ".//Product")
+
+# Create a data frame to hold the extracted data
+product_xml <- data.frame(
+  Category = xml_text(xml_find_all(products, "Category")),
+  Item_Name = xml_text(xml_find_all(products, "Item_Name")),
+  Item_ID = xml_text(xml_find_all(products, "Item_ID")),
+  Brand = xml_text(xml_find_all(products, "Brand")),
+  Price = as.numeric(xml_text(xml_find_all(products, "Price"))),
+  Variation_ID = xml_text(xml_find_all(products, "Variation_ID")),
+  Variation_Type = xml_text(xml_find_all(products, "Variation_Type")),
+  Variation_Details = xml_text(xml_find_all(products, "Variation_Details")),
+  stringsAsFactors = FALSE
+)
+
+# View the data frame
+print(product_xml)
+```
+### Reading parquet file
+```{r}
+# Reading parquet file
+library(arrow)
+
+# Unable to generate the raw file from Github
+parquet_file <- "./product_data.parquet"
+product_parquet <- read_parquet(parquet_file)
+
+print(product_parquet)
+
+```
+
+## Conclusion JSON, HTML, XML, and parquet file
+### HTML
+HTML uses predefined tags to structure a web page. It has many more tags that describes webpage layout and not very suitable for data exchange. In general it will be harder to get data from HTML page since it contains other information that does not pertain to data.  
+
+### JSON
+JSON files is commonly used by APIs its file size is smaller compared to XML but larger than csv files. JSON files is loaded completely into memory which makes it slower to read. However, it is easy for human to read and great for unstructured data.  
+
+### XML
+XML is a markup language designed for data representation and storage. It contains user defined tags that makes it versatile for application. XML can be used to represent complex data structures. However, XML file is in general larger than JSON file since it can contain a lot of information.  
+
+### Parquet
+Parquet is a self-describing in that it includes metadata that includes the schema and structure of the file. It is one of the fastest file types to read, faster than JSON, and the file size is small. However, it is not easy to read like JSON files.  

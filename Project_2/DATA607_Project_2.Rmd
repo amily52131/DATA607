@@ -4,41 +4,61 @@ author: "Ying Fang Lee"
 date: "10/13/2024"
 output: html_document
 ---
-My data
+
+### My data
+
+I choose the article [SO MUCH CANDY DATA, SERIOUSLY](https://www.scq.ubc.ca/so-much-candy-data-seriously/). This data is based on a survey conducted in 2017 on what people would like to get for Halloween. The orignal survey looks like [this] (https://www.scq.ubc.ca/wp-content/uploads/2017/10/candyhierarchysurvey2017.pdf).  The data recorded was very wide with some manual entries for country and state.There are also a lot of missing data where the question was not answered completely. 
+
+I am interested to find out the kind of candy people wish to get on Halloween in 2017 and create a ranking for it. 
+
+### Issues
+- Biggest problem is data corruption caused by human error. Spelling mistakes, answer is not uniform, and NULL answers.
+- Counties and States not spelled correctly will be part of the margin of error and be omitted from analysis.
+- Preference is not numerical
+- Data set where answers are incomplete.
+- Columns contain unidentified characters.
+
+
 ```{r}
 library(tidyverse)
 url <-"https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Project_2/candyhierarchy2017.csv"
-file<- read.csv(url)
+file<- read.csv(url, fileEncoding = "UTF-8")
 # Taking care of empty spaces and set them to NA
 file[file ==""] <- NA
 # Changing the ranking for candy to number for analysis later
-file[file=="MEH"] <- 1
-file[file=="JOY"] <- 2
-file[file=="DESPAIR"] <- 3
+file[file=="MEH"] <- 2
+file[file=="JOY"] <- 3
+file[file=="DESPAIR"] <- 1
+
+glimpse(file)
 ```
 
-Cleaning Up States
+### Cleaning Up States column
+
+-   Match pattern with State Names spelled out to the two letter State abbreviations -   Parse the cell to extract the states
+-   Leave all the other states from other countries alone
 ```{r}
 US_States <- file$Q5..STATE..PROVINCE..COUNTY..ETC
 
 # State Patterns
 
-sname <- c("Washington DC|DISTRICT OF COLUMBIA" ,  "Alabama"  , "Alaska"  , "American Samoa" ,   "Arizona" ,  "Arkansas" ,  "California" , "Colorado" , "Connecticut" , "Delaware" , "Florida" , "Georgia" , "Guam" , "Hawaii"  ,  "Idaho"  ,  "Illinois"  ,  "Indiana"  ,  "Iowa" , "Kansas" , "Kentucky" , "Louisiana" , "Maine" , "Maryland" , "Massachusetts" , "Michigan" , "Minnesota" , "Mississippi" , "Missouri" , "Montana" , "Nebraska" , "Nevada" , "New Hampshire" , "New Jersey" , "New Mexico" , "New York" , "North Carolina" , "North Dakota" , "Ohio" , "Oklahoma" , "Oregon" , "Pennsylvania" , "Puerto Rico" , "Rhode Island" , "South Carolina" , "South Dakota" , "Tennessee" , "Texas" , "Utah" , "Vermont" , "Virginia" , "Washington" , "West Virginia" , "Wisconsin" , "Wyoming")
+sname <- c("District of Columbia" ,  "Alabama"  , "Alaska"  , "American Samoa" ,   "Arizona" ,  "Arkansas" ,  "California" , "Colorado" , "Connecticut" , "Delaware" , "Florida" , "Georgia" , "Guam" , "Hawaii"  ,  "Idaho"  ,  "Illinois"  ,  "Indiana"  ,  "Iowa" , "Kansas" , "Kentucky" , "Louisiana" , "Maine" , "Maryland" , "Massachusetts" , "Michigan" , "Minnesota" , "Mississippi" , "Missouri" , "Montana" , "Nebraska" , "Nevada" , "New Hampshire" , "New Jersey" , "New Mexico" , "New York" , "North Carolina" , "North Dakota" , "Ohio" , "Oklahoma" , "Oregon" , "Pennsylvania" , "Puerto Rico" , "Rhode Island" , "South Carolina" , "South Dakota" , "Tennessee" , "Texas" , "Utah" , "Vermont" , "Virginia" , "Washington" , "West Virginia" , "Wisconsin" , "Wyoming")
 states2 <- c("DC" , "AL" , "AK" , "AS" , "AZ" , "AR" , "CA" , "CO" , "CT" , "DE" , "FL" , "GA" , "GU" , "HI" , "ID" , "IL" , "IN" , "IA" , "KS" , "KY" , "LA" , "ME" , "MD" , "MA" , "MI" , "MN" , "MS" , "MO" , "MT" , "NE" , "NV" , "NH" , "NJ" , "NM" , "NY" , "NC" , "ND" , "OH" , "OK" , "OR" , "PA" , "PR" , "RI" , "SC" , "SD" , "TN" , "TX" , "UT" , "VT" , "VA" , "WA" , "WV" , "WI" , "WY")
 
 spattern <- data.frame(sname ,  states2)
 
 # first iteration of states to convert state name to two letter abbreviation
 for(s in spattern$sname){
-  States <- grep(s ,  US_States , ignore.case = TRUE)
-  #print(spattern$temp[spattern$pstates==s])
+  States <- agrep(s ,  US_States , ignore.case = TRUE, max.distance = 1)
   US_States[States] <- toupper(spattern$states2[spattern$sname==s])
 }
+
+#ST <- as.data.frame(US_States) %>% distinct()
 
 # helper function to check if state pattern exists in the string
 return_logic <- function(spattern, string){
   b <- FALSE
-  w <- strsplit(string, " ")
+  w <- strsplit(string, "[, ;.]+") #%>% unlist()
   for (c in w){
     if(2 %in%str_length(c) && TRUE %in% grepl(spattern, c, ignore.case = TRUE)){
       b <- TRUE
@@ -54,41 +74,102 @@ for (s in spattern$states2) {
     }
   }
 }
-file$Q5..STATE..PROVINCE..COUNTY..ETC <- as.data.frame(US_States)
+
+ST <- as.data.frame(US_States) %>% distinct() %>% arrange(US_States)
+head(ST)
+# Overwrite the result of states cleaned
+file <- file %>% mutate(States = US_States)
 ```
 
-Cleaning Up Country
+### Cleaning Up Country Column
+
 
 ```{r}
 # Clean up country names 
 Countries <- file$Q4..COUNTRY %>% toupper() %>% str_trim()
 
 # Pattern to match
-pat <- c("USA","U.S.A", "U.S","United States","Costa Rica")
+pat <- c("USA","U.S.A", "U.S","United States","Costa Rica","America")
 # Other countries
 opat <- c("England", "Canada", "Mexico","Germany")
 
-
+# Match pattern where several instance of misspelled United States of America
+# Assign the Country to America
 for (p in pat){
   matches <- agrep(p, Countries,ignore.case = TRUE, max.distance = 1)
   Countries[matches] <- "USA"
 }
+# Match pattern for other countries
 for (p in opat){
   matches <- agrep(p, Countries,ignore.case = TRUE, max.distance = 1)
   Countries[matches] <- toupper(p)
 }
+# Some left the US State as the Country
 for(s in spattern$sname){
   matches <- grep(s ,  Countries , ignore.case = TRUE)
   Countries[matches] <- "USA"
 }
 
-file$Q4..COUNTRY <- as.data.frame(Countries)
+Co <- as.data.frame(Countries) %>% distinct() %>% arrange(Countries)
+
+file <- file %>% mutate(Country = Countries)
 
 
 ```
 
+### Extracting Valid Data
+- Data where country is USA
+- State is a valid USA State
+- All the Candy with the ranking data
 
 ```{r}
+# Remove special characters from the column names
+names(file) <- gsub("Õ", "'", names(file))
+names(file) <- gsub("\\."," ",names(file))
+# Valid US data.
+vd_US <- file %>% 
+  mutate(notPerfect =  file %>% 
+           select(starts_with("Q6")) %>%
+           is.na %>% rowSums, .after = starts_with("Q5")) %>% 
+  filter(Country == "USA" & States %in% spattern$states2 & notPerfect == 0) %>% 
+  select(ID = 'Internal ID', 
+         Gender = starts_with("Q2"), 
+         Age = starts_with("Q3"),
+         Country,
+         States,
+         starts_with("Q6"))  %>% 
+ # rename_with(~gsub("^Q6   ","", .), starts_with("Q6"))
+  pivot_longer(
+    cols = starts_with("Q6"),
+    names_to = "Candy_Catagory",
+    values_to = "Rank",
+    values_drop_na = TRUE
+  )
 
+# Extract the values for candy type
+vd_US$Candy_Catagory <- gsub("Q6   ","",vd_US$Candy_Catagory)
+# Convert Rank as integer
+vd_US$Rank <- as.integer(vd_US$Rank)
+glimpse(vd_US)
+```
+
+
+```{r}
+# Candy Rank
+candy_rank <- vd_US %>% 
+  group_by(Candy_Catagory) %>% 
+  summarize(Ranking = sum(Rank)) %>% 
+  arrange(desc(Ranking))
+
+# Plot the first 10 candy categories from rank
+candy_rank %>% 
+  head(10) %>%  
+  ggplot(aes(y = Candy_Catagory, x = Ranking)) +
+  geom_bar(stat = "identity") + 
+  labs(
+    y = "Candy Category",
+    x = "Score",
+    title = "Most Wanted Candy Category for Halloween 2017"
+  )
 ```
 

@@ -1,0 +1,48 @@
+---
+title: "DATA607_Assignment_9"
+author: "Ying Fang Lee"
+date: "2024-10-27"
+output: html_document
+---
+## Assignment - Web APIs
+
+### Your task is to choose one of the New York Times APIs, construct an interface in R to read in the JSON data, and transform it into an R DataFrame.
+
+We will need to use libraries httr, jsonlite, and dplyr to extract the data from API from JSON format to R Dataframe
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(httr)
+library(jsonlite)
+library(dplyr)
+```
+
+Sign up for the nytimes developer apis and activate an API key for the API accessing. I choose the books API and from the API documentation get the base url and use it to build out API call. 
+```{r}
+# Define API key and endpoint
+api_key <- "PR6ullqlzC8T72wCHIUWBbqkTQWAgRRe"
+base_url <- "https://api.nytimes.com/svc/books/v3/lists/names.json"
+```
+
+Get the response with the url constructed and check the response code
+```{r}
+# Construct the full URL with query parameters
+url <- paste0(base_url, "?q=", "&api-key=", api_key) %>% print()
+
+# Make the GET request
+response <- GET(url)
+
+# Check if the request was successful
+if (status_code(response) != 200) {
+  stop("API request failed!")
+  }
+```
+
+Parse the response data into json format then convert it to dataframe.
+
+```{r}
+# Parse the JSON response into a list
+json_data <- fromJSON(content(response, "text", encoding = "UTF-8"))
+
+# Extract the articles from the JSON data
+booknames <- json_data$results %>% as.data.frame() %>% print()
+```

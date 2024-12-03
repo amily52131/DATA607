@@ -16,7 +16,7 @@ library(jsonlite)
 library(dplyr)
 ```
 
-Sign up for the nytimes developer apis and activate an API key for the API accessing. I choose the books API and from the API documentation get the base url and use it to build out API call. 
+Sign up for the NY Times developer apis and activate an API key for the API accessing. I choose the books API and from the API documentation get the base url and use it to build out API call. 
 ```{r}
 # Define API key and endpoint
 api_key <- "PR6ullqlzC8T72wCHIUWBbqkTQWAgRRe"
@@ -44,5 +44,10 @@ Parse the response data into json format then convert it to dataframe.
 json_data <- fromJSON(content(response, "text", encoding = "UTF-8"))
 
 # Extract the articles from the JSON data
-booknames <- json_data$results %>% as.data.frame() %>% print()
+booknames <- json_data$results %>% as.data.frame()
+head(booknames)
+summary(booknames)
 ```
+
+### Conclusion
+There are 59 categories of NY Times best sellers. They are updated monthly or weekly where the oldest published book on the list starts from 2008. 

@@ -365,6 +365,17 @@ interface in R to read in the JSON data, and transform it into an R
 DataFrame.</h3>
 <p>We will need to use libraries httr, jsonlite, and dplyr to extract
 the data from API from JSON format to R Dataframe</p>
+<pre class="r"><code>library(httr)
+library(jsonlite)
+library(dplyr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
 <p>Sign up for the NY Times developer apis and activate an API key for
 the API accessing. I choose the books API and from the API documentation
 get the base url and use it to build out API call.</p>

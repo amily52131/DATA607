@@ -9,8 +9,7 @@ output: html_document
 ### Your task is to choose one of the New York Times APIs, construct an interface in R to read in the JSON data, and transform it into an R DataFrame.
 
 We will need to use libraries httr, jsonlite, and dplyr to extract the data from API from JSON format to R Dataframe
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r}
 library(httr)
 library(jsonlite)
 library(dplyr)

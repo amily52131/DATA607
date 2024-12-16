@@ -13,19 +13,20 @@ We will need to use libraries httr, jsonlite, and dplyr to extract the data from
 library(httr)
 library(jsonlite)
 library(dplyr)
+library(tidyverse)
 ```
 
 Sign up for the NY Times developer apis and activate an API key for the API accessing. I choose the books API and from the API documentation get the base url and use it to build out API call. 
 ```{r}
 # Define API key and endpoint
 api_key <- "PR6ullqlzC8T72wCHIUWBbqkTQWAgRRe"
-base_url <- "https://api.nytimes.com/svc/books/v3/lists/names.json"
+base_url <- "https://api.nytimes.com/svc/books/v3/lists/full-overview.json"
 ```
 
 Get the response with the url constructed and check the response code
 ```{r}
 # Construct the full URL with query parameters
-url <- paste0(base_url, "?q=", "&api-key=", api_key) %>% print()
+url <- paste0(base_url, "?", "&api-key=", api_key) %>% print()
 
 # Make the GET request
 response <- GET(url)
@@ -42,11 +43,74 @@ Parse the response data into json format then convert it to dataframe.
 # Parse the JSON response into a list
 json_data <- fromJSON(content(response, "text", encoding = "UTF-8"))
 
-# Extract the articles from the JSON data
-booknames <- json_data$results %>% as.data.frame()
-head(booknames)
-summary(booknames)
+# Extract JSON to dataframe
+book_lists <- json_data$results$lists %>% as.data.frame()
+books <- json_data$results$lists$books
+# Empty dataframe for books
+books_df <- data.frame(counter = integer(),
+                       title = character(), 
+                       author = character(), 
+                       rank = integer(), 
+                       last_rank = integer(),
+                       publisher = character(),
+                       stringsAsFactors = FALSE)
+# create an identifier for join later
+book_lists <- book_lists %>% mutate(counter = 1:18)
+
+# parsing the list of books
+item <- 1
+for (book in books) {
+  dataf <- data.frame(
+    counter = item,
+    title = book$title,
+    author = book$author,
+    rank = book$rank,
+    last_rank = book$rank_last_week,
+    publisher = book$publisher,
+    stringsAsFactors = FALSE
+  )
+  books_df <- rbind(books_df, dataf)
+  item <- item+1
+  }
+
+# Create data frame for best sellers
+best_sellers <- left_join(books_df, book_lists %>% select(counter, list_id,list_name,updated)) %>% select(-counter)
+
+```
+### Analysis
+
+```{r}
+# Which author was on the best seller list the most times
+best_author <- best_sellers %>% 
+  count(author) %>%
+  arrange(desc(n)) %>%
+  head(6)
+
+best_author
+
+best_sellers %>% 
+  filter(author %in% best_author$author) %>% 
+  ggplot(aes(x = author)) +
+  geom_bar()
 ```
 
-### Conclusion
-There are 59 categories of NY Times best sellers. They are updated monthly or weekly where the oldest published book on the list starts from 2008. 
+
+```{r}
+# Which publisher produced the most best sellers
+best_publisher <- best_sellers %>% 
+  count(publisher) %>% 
+  arrange(desc(n)) %>% 
+  head(3)
+
+best_publisher
+
+best_sellers %>% 
+  filter(publisher %in% best_publisher$publisher) %>% 
+  ggplot(aes(x = publisher)) +
+  geom_bar()
+```
+
+
+### Conslusion 
+Freida McFadden	and	Kristin Hannah authored the most best sellers for different categories as of the list from December. Scholastic is the publisher that published the most best sellers. 
+

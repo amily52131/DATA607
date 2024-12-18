@@ -88,7 +88,7 @@ file <- file %>% mutate(States = US_States)
 ```
 
 ### Cleaning Up Country Column
-- The unidentified characters really became a problem in this part. So I was 
+- The unidentified characters really became a problem in this part. So I used regular expression and approximate match to get the likely county that the user inputed. 
 
 ```{r}
 # Clean up country names 
@@ -158,8 +158,8 @@ vd_US$Candy_Catagory <- gsub("Q6   ","",vd_US$Candy_Catagory)
 vd_US$Rank <- as.integer(vd_US$Rank)
 glimpse(vd_US)
 ```
-### Analyze
-
+### Analyze  
+We will look at the top 10 candy from the survey.  
 ```{r}
 # Candy Rank
 candy_rank <- vd_US %>% 
@@ -178,6 +178,7 @@ candy_rank %>%
     title = "Most Wanted Candy Category for Halloween 2017"
   )
 ```
+  
 ### Conclusion
 This data set is difficult to clean up because there were many fields where it was freely entered by the participants of the survey. I tried using regular expression and did my best to clean up the location part of the dataset so I can do my analysis only on US data. My analysis shows that the most popular candy for this data set is any full size candy bar follow by Twix. 
 
@@ -303,6 +304,9 @@ doh_file <- doh_file %>%
     # When store is reopened by DOHMH
     VIOLATION.CODE = ifelse(ACTION == RO, "Re-opened", VIOLATION.CODE),
     VIOLATION.DESCRIPTION = ifelse(ACTION == RO, "Establishment Re-Opened by DOHMH", VIOLATION.DESCRIPTION),
+    
+   # convert Inspection Date to date object 
+   INSPECTION.DATE = as.Date(INSPECTION.DATE, format = "%m/%d/%Y")
   )
   
 # Any field that does not have a value will be set to NA
@@ -313,8 +317,33 @@ doh_file[doh_file ==""] <- NA
 
 ### Analyze
 
+With the data being tidy now, we can do an analysis on violations over time by violation code. With the graph it is interesting to see that from the early year of 2020 to mid 2021 there were no violations cited probably due to COVID pandemic. 
 
 
+```{r}
+# List of monthly citations without the new establishments where violation code is not missing
+monthly_citation_type <- doh_file %>% 
+  filter(INSPECTION.DATE>1/1/1900, !is.na(VIOLATION.CODE)) %>% 
+  mutate(month = floor_date(INSPECTION.DATE, "month")) %>% 
+  group_by(month, VIOLATION.CODE) %>% 
+  summarise(type_count = n(), .groups = "drop") %>% 
+  #left_join(daily_citation) %>% 
+  ggplot(aes(x = month, y = type_count, fill = VIOLATION.CODE))+
+  geom_bar(stat = "identity") +
+  labs(title = "Monthly Violation Counts by Violation Code",
+       x = "Inspection Date",
+       y = "Number of Violations"
+       ) +
+  theme(legend.position = "none") +
+  coord_flip()
+
+monthly_citation_type
+
+
+```
+
+### Conclusion
+This data from Department of Health with restaurant violation citation has many missing values due to the way this report was put together from other datasets not visible to me. I did my best to filled the categorical values of missing data if I know the reason that it was missing such as the new establishment listing if the inspection date is 1/1/1900. The analysis I did was trying to see if there was a trend for violation citations and it is interesting to see that from early 2020 to end of 2021 there were no citations likely due to COVID. It is also interesting to see that the number of citations spiked way up after pandemic. This may be due to the way this report was put together for citations of the last three years or since the last inspection. 
 
 
 

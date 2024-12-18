@@ -1,17 +1,16 @@
 ---
-title: "DATA607 Final Project"
+title: "DATA607 Final Project Presentation"
 author: "Ying Fang Lee"
 date: "2024-12-18"
-output: html_document
+output: powerpoint_presentation
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 ```
 
-
-### Intruduction
+## Intruduction
 The objective of this project is to analyze popularity of movie genre over time.
 
 I found data on Kaggle for [“which movie should I watch today?”](https://www.kaggle.com/datasets/hassanelfattmi/which-movie-should-i-watch-today?resource=download) which included 4 csv files called movies, FilmDetails, MoreInfo, and PosterPath.csv. The data looks like a relational database table where each file is referenced through the movie ID column.
@@ -22,27 +21,16 @@ The data will need to be cleaned up first since there are some observations that
 
 Results this project seeks to achieve:
 
-Find genre popularity ranking based on ranking
-Find which genre is gaining popularity over time
-Find out which actor and director have the highest grossing film
+- Find genre popularity ranking based on ranking
+- Find which genre is gaining popularity over time
+- Find out which actor and director have the highest grossing film
 
+## Load Data
 
-### Load Data
 I tried to upload data onto the MySQL database so I can simulate pulling data from the database and working on it with R. It was taking a very long time to upload probably due to the volume of data in each csv file. To simulate I will pull data from Github into dataframe and only MoreInfo will be pulled from MySQL database.
-```{r}
-# load data from github
-url <-"https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Final_Project/Data/FilmDetails.csv"
-FilmDetails<- read.csv(url)
 
-url <- "https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Final_Project/Data/Movies.csv"
-Movies <- read.csv(url)
-
-#url <- "https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Final_Project/Data/MoreInfo.csv"
-#MoreInfo <- read.csv(url)
-```
-
-Initiate database connection
-```{r}
+## Initiate database connection
+```{r, include= TRUE, echo=TRUE}
 library(DBI)      #Database infrastructure for R
 library(RMySQL)   #Translating R and MySQL
 
@@ -67,27 +55,41 @@ mydb <- dbConnect(
   host = dbConfig$server
 )
 ```
-
-```{r}
+## Get Dataframe for each file
+```{r, echo=TRUE}
 #Convert the information from MySQL to R data frame
 MoreInfo_db <- tbl(mydb, "moreinfo") #convert source data to table
 MoreInfo_df <- collect(MoreInfo_db) #convert table to R data frame
 glimpse(MoreInfo_df)
 dbDisconnect(mydb) #Disconnect from database
+
+# load data from github
+url <-"https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Final_Project/Data/FilmDetails.csv"
+FilmDetails<- read.csv(url)
+glimpse(FilmDetails)
+
+url <- "https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Final_Project/Data/Movies.csv"
+Movies <- read.csv(url)
+glimpse(Movies)
 ```
 
-### Clean up data
+## Clean up Data
 The data obtained were not tidy. There were many blank values and there are many values that has unwanted characters in there like the $ symbol for revenue. In this part I will clean up the data to make it into tidy format.
+
+## FilmDetails
 
 ```{r}
 # FilmDetails
 fd_dt <- sapply(FilmDetails, class) %>% print()
-head(FilmDetails)
+head(FilmDetails) %>% knitr::kable()
 ```
 To make FilmDetails tidy:
+
 - Separate top_billed column for actors by the deliminator and then pivot back into the dataframe as "actors"
 
-```{r}
+## FilmDetails_clean
+
+```{r, echo = TRUE}
 # separate the column by deliminator , and then pivot into a single column called Actors
 FilmDetails_clean <- FilmDetails %>% 
   separate_wider_delim(top_billed,
@@ -104,19 +106,23 @@ FilmDetails_clean <- FilmDetails %>%
 
 #Trim the spaces for the actor names
 FilmDetails_clean$actor <- str_trim(FilmDetails_clean$actor)
+head(FilmDetails_clean) %>% knitr::kable()
 ```
 
-
+## Movies
 ```{r}
 # Movies
 m_dt <- sapply(Movies, class) %>% print()
-head(Movies)
+head(Movies) %>% knitr::kable()
 ```
+
 To make Movies tidy:
 - Separate genres by the deliminator then pivot back into as "genres"
 - Convert runtime_hour and runtime_min to "total_length"
 - Convert release_date into a date object
-```{r}
+
+## Movies_clean
+```{r, echo=TRUE}
 # Tidy up genres
 Movies_clean <- Movies %>% 
   separate_wider_delim(genres,
@@ -139,19 +145,23 @@ Movies_clean <- Movies_clean %>%
 
 # convert release_dte into date object so R can compare
 Movies_clean$release_date <- as.Date(Movies_clean$release_date)
-
+head(Movies_clean) %>% knitr::kable()
 ```
 
+## MoreInfo
 
 ```{r}
 # MoreInfo
 mi_dt <- sapply(MoreInfo_df, class) %>% print()
-head(MoreInfo_df)
+head(MoreInfo_df) %>% knitr::kable()
 ```
 To make MoreInfo tidy:
 - convert runtime to total_length
 - convert budget to integer
 - convert revenue to integer
+
+## MoreInfo_clean
+
 
 ```{r}
 # convert runtime to total_length by separating hours and minutes
@@ -166,11 +176,12 @@ MoreInfo_clean$budget <- as.integer(gsub("[$,]","", MoreInfo_clean$budget))
   
 # convert revenue to integer
 MoreInfo_clean$revenue <- as.integer(gsub("[$,]","", MoreInfo_clean$revenue))
+head(MoreInfo_clean) %>% knitr::kable()
   
 ```
-### Explore
-Since our data are in three different tables, I will pull them together into a big table of movie_details.
-```{r}
+
+## Explore
+```{r, echo=TRUE}
 # movie_details 
 movie_details <- Movies_clean %>% 
   left_join(MoreInfo_clean %>% select(id, budget, revenue)) %>% 
@@ -179,11 +190,13 @@ movie_details <- Movies_clean %>%
 movie_details <- movie_details %>% 
   left_join(FilmDetails_clean %>% select(id, director, actor))
 
-
+head(movie_details, 15) %>% knitr::kable()
 ```
-### Analyze
 
-#### Find genre popularity ranking based on user_score
+## Find genre popularity ranking based on user_score
+
+highest average score by genre
+
 ```{r}
 # highest average score by genre
 high_rating <- movie_details %>% 
@@ -197,32 +210,26 @@ high_rating <- movie_details %>%
   theme_minimal() +
   coord_flip()
 high_rating
+```
 
+
+## user_score based on genre 
+
+```{r}
 # score based on genre 
 genres_rating <- movie_details %>% 
   group_by(genres) %>% 
   ggplot(aes(x = user_score, fill = genres)) + 
   geom_histogram(bins = 20) +
-  facet_wrap(~genres)
+  facet_wrap(~genres) +
+  labs(title = "Score Based on Genre", 
+       x = "Genre", 
+       y = "Average Rating")
+
 genres_rating
-
-# Bayesian rating formula (weighted average)
-# M is global mean
-M <- mean(Movies_clean$user_score)
-# C is minimum vote count threshold
-C <- 1000
-
-weighted_average <- movie_details %>%
-  mutate(standardized_rating = (C * M + vote_count * user_score) / (C + vote_count)) %>% 
-  group_by(genres) %>%
-  summarise(avg_srating = mean(standardized_rating))
-ggplot(data = weighted_average, aes(x = reorder(genres, avg_srating), y = avg_srating)) +
-  geom_bar(stat = "identity", fill = "steelblue")+ coord_flip()
-
 ```
 
-
-#### Find which genre is gaining popularity over time.
+## Find which genre is gaining popularity over time.
 
 ```{r}
 # get the year from release date
@@ -239,19 +246,23 @@ ggplot(genre_trend, aes(x = release_year, y = avg_rate_year, color = genres)) +
   theme_minimal() + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   facet_wrap(~genres)
+```
 
+## number one movie of that genre for that year
+
+```{r}
 # number one movie of that genre for that year
 movie_by_genre <- genre_trend %>% 
   group_by(release_year, genres) %>% 
   arrange(desc(user_score)) %>% 
   slice(1) %>% 
   select(title, release_year, genres,user_score, director)
-
-
+  
+head(movie_by_genre, 10) %>% knitr::kable()
 ```
 
+## Which movie has the best rating in that genre?
 
-#### Which movie has the best rating in that genre?
 ```{r}
 best_rated_movie <- movie_details %>% 
   group_by(genres) %>% 
@@ -263,11 +274,12 @@ knitr::kable(best_rated_movie, position = "center")
   
 ```
 
-### Conclusion
+## Conclusion
 
 From Kaggle, this data set about "which movie I should see?" has three files tied by the movie id. I originally tried to upload all three files into MySQL database but was unable to do so. In the end only one table was successfully uploaded and pulled from MySQL the other two tables were uploaded onto Github and pulled with the raw address. 
 
 There were not too many cleaning I had to do with this data set. Mostly converting the values to the right data type and separate the columns that had multiple values in one cell. When data is in the right data type like dates, then it will become easier to do analysis that shows trend over time. I tried a couple different ways to analyze the data using the clean data from previous step, I created a movie_details data frame for analysis. 
 
 First I found the genre popularity ranking based on user_score. Surprisingly the War genres comes in first even though it doesn't have as many as categories like comedy or drama but the overall quality of movies in that genre generally scored higher than other categories. Then I tried to find the trend for genre over time and it seems that other than the Animation category that is gaining better ratings over the years, comedy, crime, horror, mystery, and thriller has a noticeable declining rating over the years. Lastly, I looked for the best rated movie titles in each category and noticed that some movies appeared in two different genres. This is due to when the genre is split the user_score stayed the same for each observation of the same movie but for different genre. Maybe if each movie is given a rating score evaluated for that category then we would get a more accurate list of best movies in each genre. 
+
 

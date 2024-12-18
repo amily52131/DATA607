@@ -182,7 +182,7 @@ candy_rank %>%
 ## Second Data Set
 ### Audio Book and rating
 
-This dataset from Kaggle [Audible Dataset](https://www.kaggle.com/datasets/snehangsude/audible-dataset?select=audible_uncleaned.csv) aimed to understand how the audio book market has been growing over the years.This uncleaned data needs cleaning up in each observations to make the data type standardized. 
+This dataset from Kaggle [Audible Dataset](https://www.kaggle.com/datasets/snehangsude/audible-dataset?select=audible_uncleaned.csv) aimed to understand how the audio book market has been growing over the years.This uncleaned data needs cleaning up in each observations to make the data type standardized. I am only looking at films in the English language for this project
 
 ### Load the data
 ```{r}
@@ -195,6 +195,11 @@ audible_file <- audible_file %>%
 ```
 
 ### Clean up the Data
+The authors column was cleaned up by removing "Writtenby" so that we can do analysis with author name.
+The narrator column was cleaned up by removing "Narratedby" so that we can do analysis with narrator name.
+Standardized the movie run time length by extracting the hours and minutes from the time field and calculated a new column called total_length.
+Separated ratings and reviews into two columns since rating is always out of five we don't have to specify in the column. 
+
 ```{r}
 # Cleaning up the columns
 # Authors column remove "Writtenby"
@@ -219,6 +224,19 @@ audible_file <- audible_file %>%
   star_rating = as.numeric(gsub(" out of 5 stars.*", "", audible_file$stars)),
   reviews = as.numeric(gsub(".*stars([0-9]+) rating.*", "\\1", stars))
   )
+
+```
+### Analysis
+With the data cleaned up we can now answer some questions as such as of the top rated audio books what is the most common length of audio book?
+```{r}
+common_length <- audible_file %>% 
+  filter(star_rating > 4) %>% 
+  ggplot(aes(x = total_length)) +
+  geom_histogram(bin = 20)
+# get the information for histogram
+plot_data <- ggplot_build(common_length)
+
+bin_data <- plot_data$data[[1]]
 
 ```
 

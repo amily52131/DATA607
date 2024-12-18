@@ -5,8 +5,9 @@ date: "10/13/2024"
 output: html_document
 ---
 
-### My data
+## First Dataset
 
+### What is the best candy?
 I choose the article [SO MUCH CANDY DATA, SERIOUSLY](https://www.scq.ubc.ca/so-much-candy-data-seriously/). This data is based on a survey conducted in 2017 on what people would like to get for Halloween. The orignal survey looks like [this] (https://www.scq.ubc.ca/wp-content/uploads/2017/10/candyhierarchysurvey2017.pdf).  The data recorded was very wide with some manual entries for country and state.There are also a lot of missing data where the question was not answered completely. 
 
 I am interested to find out the kind of candy people wish to get on Halloween in 2017 and create a ranking for it. 
@@ -34,9 +35,14 @@ glimpse(file)
 ```
 
 ### Cleaning Up States column
-
--   Match pattern with State Names spelled out to the two letter State abbreviations -   Parse the cell to extract the states
+#### Issues
+-   Match pattern with State Names spelled out to the two letter State abbreviations 
+-   Parse the cell to extract the states
 -   Leave all the other states from other countries alone
+
+#### Solutions
+- Have a state table for matching with the full name and the two character abbreviation
+- Created a function to breakdown the State string and isolate string that match the State abbreviations and 
 ```{r}
 US_States <- file$Q5..STATE..PROVINCE..COUNTY..ETC
 
@@ -82,7 +88,7 @@ file <- file %>% mutate(States = US_States)
 ```
 
 ### Cleaning Up Country Column
-
+- The unidentified characters really became a problem in this part. So I was 
 
 ```{r}
 # Clean up country names 
@@ -164,7 +170,7 @@ candy_rank <- vd_US %>%
 # Plot the first 10 candy categories from rank
 candy_rank %>% 
   head(10) %>%  
-  ggplot(aes(y = Candy_Catagory, x = Ranking)) +
+  ggplot(aes(y = reorder(Candy_Catagory, Ranking), x = Ranking)) +
   geom_bar(stat = "identity") + 
   labs(
     y = "Candy Category",
@@ -172,4 +178,49 @@ candy_rank %>%
     title = "Most Wanted Candy Category for Halloween 2017"
   )
 ```
+  
+## Second Data Set
+### Audio Book and rating
+
+This dataset from Kaggle [Audible Dataset](https://www.kaggle.com/datasets/snehangsude/audible-dataset?select=audible_uncleaned.csv) aimed to understand how the audio book market has been growing over the years.This uncleaned data needs cleaning up in each observations to make the data type standardized. 
+
+### Load the data
+```{r}
+# Get the list of audible books from csv file uploaded to Github
+url <-"https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Project_2/audible_uncleaned.csv"
+audible_file<- read.csv(url)
+# Filter only the English books
+audible_file <- audible_file %>% 
+  filter(language == "English")
+```
+
+### Clean up the Data
+```{r}
+# Cleaning up the columns
+# Authors column remove "Writtenby"
+audible_file$author <- gsub("Writtenby:", "", audible_file$author)
+# Narrator column remove "Narratedby:"
+audible_file$narrator <- gsub("Narratedby:", "", audible_file$narrator)
+# Extract hours and minutes to total_length in minutes
+audible_file <- audible_file %>% 
+  mutate(hours = as.numeric(gsub("([0-9]+) hr.*", "\\1",audible_file$time)),
+         minutes = as.numeric(gsub(".* ([0-9]+) min.*$", "\\1",audible_file$time)),
+         hours = ifelse(is.na(hours), 0, hours),
+         minutes = ifelse(is.na(minutes), as.numeric(gsub("([0-9]+) min.*$", "\\1",audible_file$time)) , minutes),
+         minutes = ifelse(is.na(minutes), 0, minutes),
+         total_length = hours * 60 + minutes
+  )
+# Standardize date format
+audible_file$releasedate <- dmy(audible_file$releasedate)
+
+# Extract ratings and reviews
+audible_file <- audible_file %>% 
+  mutate(
+  star_rating = as.numeric(gsub(" out of 5 stars.*", "", audible_file$stars)),
+  reviews = as.numeric(gsub(".*stars([0-9]+) rating.*", "\\1", stars))
+  )
+
+```
+
+
 

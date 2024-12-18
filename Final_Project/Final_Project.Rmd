@@ -42,9 +42,9 @@ mydb <- dbConnect(
 dbListTables(mydb)
 
 #Convert the information from MySQL to R data frame
-MovieInfo <- tbl(mydb, "movieinfo") #convert source data to table
-MovieInfo_df <- collect(MovieInfo) #convert table to R data frame
-head(MovieInfo_df)
+MoreInfo <- tbl(mydb, "movies") #convert source data to table
+MoreInfo_df <- collect(MoreInfo) #convert table to R data frame
+head(MoreInfo_df)
 dbDisconnect(mydb) #Disconnect from database
 ```
 

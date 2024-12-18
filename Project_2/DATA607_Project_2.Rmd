@@ -158,7 +158,7 @@ vd_US$Candy_Catagory <- gsub("Q6   ","",vd_US$Candy_Catagory)
 vd_US$Rank <- as.integer(vd_US$Rank)
 glimpse(vd_US)
 ```
-
+### Analyze
 
 ```{r}
 # Candy Rank
@@ -178,7 +178,9 @@ candy_rank %>%
     title = "Most Wanted Candy Category for Halloween 2017"
   )
 ```
-  
+### Conclusion
+This data set is difficult to clean up because there were many fields where it was freely entered by the participants of the survey. I tried using regular expression and did my best to clean up the location part of the dataset so I can do my analysis only on US data. My analysis shows that the most popular candy for this data set is any full size candy bar follow by Twix. 
+
 ## Second Data Set
 ### Audio Book and rating
 
@@ -228,17 +230,39 @@ audible_file <- audible_file %>%
 ```
 ### Analysis
 With the data cleaned up we can now answer some questions as such as of the top rated audio books what is the most common length of audio book?
+With the histogram plotted out we can see the the most common length of audio books 4 stars above is 3 hours and 19 minutes to 9 hours and 59 minutes. 
 ```{r}
 common_length <- audible_file %>% 
   filter(star_rating > 4) %>% 
   ggplot(aes(x = total_length)) +
-  geom_histogram(bin = 20)
+  geom_histogram(bins = 20)
+common_length
 # get the information for histogram
 plot_data <- ggplot_build(common_length)
-
+# extract the bin data
 bin_data <- plot_data$data[[1]]
+# get the top 5 most counted container and their minutes value
+bin_data  %>% 
+  select(count, xmin, xmax) %>% 
+  mutate(
+         min_hour = ifelse(xmin<0, 0, floor(xmin/60)),
+         min_min = xmin %% 60,
+         max_hour = floor (xmax/60),
+         max_min = xmax %% 60,
+         ) %>% 
+  head(5) %>% 
+  arrange(desc(count)) %>% 
+  print()
+
 
 ```
+
+### Conclusion
+This data set is not tidy because some cells contain more than one type of information like in the case of the category "stars". To resolve this issue and make the data tidy, I use regular expression to extract the numbers for stars rating and separated the number of reviewers to two columns. I also converted the movie time from text form to total_length so we can analyze using the total audio length in minutes. I found out that the most common length of audio length for ratings more than 4 is from 3 hours and 19 minutes to 9 hours and 59 minutes. 
+```{r}
+
+```
+
 
 
 

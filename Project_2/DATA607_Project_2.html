@@ -816,6 +816,66 @@ I found out that the most common length of audio length for ratings more
 than 4 is from 3 hours and 19 minutes to 9 hours and 59 minutes.</p>
 </div>
 </div>
+<div id="third-data-set" class="section level2">
+<h2>Third Data Set</h2>
+<div id="dohmh-new-york-city-restaurant-inspection-results" class="section level3">
+<h3>DOHMH New York City Restaurant Inspection Results</h3>
+<p>I am using dataset from <a href="https://data.cityofnewyork.us/Health/DOHMH-New-York-City-Restaurant-Inspection-Results/43nn-pn8j/about_data">DOHMH
+New York City Restaurant Inspection Results</a> where it contains the
+violation citations from every full or special program inspection
+conducted up to three years prior to the most recent inspection for
+restaurants and college cafeterias. This data was compiled from more
+than one data source and contains many blank values making it not
+tidy.</p>
+</div>
+<div id="load-data" class="section level3">
+<h3>Load Data</h3>
+<p>Since this dataset is very large, the file is not uploaded to github
+and I will be running this locally on my computer.</p>
+<pre class="r"><code># Get the list of restaurant violation citations
+url &lt;-&quot;DOHMH_New_York_City_Restaurant_Inspection_Results.csv&quot;
+doh_file&lt;- read.csv(url)</code></pre>
+</div>
+<div id="data-cleaning" class="section level3">
+<h3>Data Cleaning</h3>
+<p>This dataset is fairly regular but because there are a lot of empty
+values it makes it hard to run any analysis. For data cleaning I will
+mainly focus on handling the missing data.</p>
+<pre class="r"><code># Handle &quot;New Establishment&quot;
+# Per the data index provided by DOH those with inspection data &quot;01/01/1900&quot; are new establishments created so does not have violation, grade, or any information
+
+# NE is variable for new establishment
+NE &lt;- &quot;01/01/1900&quot;
+# NV is variable for action = No violations were recorded at the time of this inspection.
+NV &lt;- &quot;No violations were recorded at the time of this inspection.&quot;
+# RO is a variable for action = Establishment re-opened by DOHMH.
+RO &lt;- &quot;Establishment re-opened by DOHMH.&quot;
+
+doh_file &lt;- doh_file %&gt;% 
+  mutate(
+    # when establishment is new
+    CUISINE.DESCRIPTION = ifelse(INSPECTION.DATE == NE, &quot;NEW ESTABLISHMENT&quot;, CUISINE.DESCRIPTION),
+    ACTION = ifelse(INSPECTION.DATE == NE, &quot;NEW ESTABLISHMENT&quot;, ACTION),
+    VIOLATION.CODE = ifelse(INSPECTION.DATE == NE, &quot;NEW ESTABLISHMENT&quot;, VIOLATION.CODE),
+    VIOLATION.DESCRIPTION = ifelse(INSPECTION.DATE == NE, &quot;NEW ESTABLISHMENT&quot;, VIOLATION.DESCRIPTION),
+    INSPECTION.TYPE = ifelse(INSPECTION.DATE == NE, &quot;NEW ESTABLISHMENT&quot;, INSPECTION.TYPE),
+    
+    # When no violation was recorded No violations were recorded at the time of this inspection.
+    VIOLATION.CODE = ifelse(ACTION == NV, &quot;NONE&quot;, VIOLATION.CODE),
+    VIOLATION.DESCRIPTION = ifelse(ACTION == NV, &quot;NO VIOLATION RECORDED&quot;, VIOLATION.DESCRIPTION),
+    
+    # When store is reopened by DOHMH
+    VIOLATION.CODE = ifelse(ACTION == RO, &quot;Re-opened&quot;, VIOLATION.CODE),
+    VIOLATION.DESCRIPTION = ifelse(ACTION == RO, &quot;Establishment Re-Opened by DOHMH&quot;, VIOLATION.DESCRIPTION),
+  )
+  
+# Any field that does not have a value will be set to NA
+doh_file[doh_file ==&quot;&quot;] &lt;- NA</code></pre>
+</div>
+<div id="analyze-1" class="section level3">
+<h3>Analyze</h3>
+</div>
+</div>
 
 
 

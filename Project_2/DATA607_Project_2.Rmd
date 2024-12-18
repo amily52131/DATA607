@@ -228,7 +228,7 @@ audible_file <- audible_file %>%
   )
 
 ```
-### Analysis
+### Analyze
 With the data cleaned up we can now answer some questions as such as of the top rated audio books what is the most common length of audio book?
 With the histogram plotted out we can see the the most common length of audio books 4 stars above is 3 hours and 19 minutes to 9 hours and 59 minutes. 
 ```{r}
@@ -259,9 +259,80 @@ bin_data  %>%
 
 ### Conclusion
 This data set is not tidy because some cells contain more than one type of information like in the case of the category "stars". To resolve this issue and make the data tidy, I use regular expression to extract the numbers for stars rating and separated the number of reviewers to two columns. I also converted the movie time from text form to total_length so we can analyze using the total audio length in minutes. I found out that the most common length of audio length for ratings more than 4 is from 3 hours and 19 minutes to 9 hours and 59 minutes. 
+
+## Third Data Set
+### DOHMH New York City Restaurant Inspection Results
+
+I am using dataset from [DOHMH New York City Restaurant Inspection Results](https://data.cityofnewyork.us/Health/DOHMH-New-York-City-Restaurant-Inspection-Results/43nn-pn8j/about_data) where it contains the violation citations from every full or special program inspection conducted up to three years prior to the most recent inspection for restaurants and college cafeterias. This data was compiled from more than one data source and contains many blank values making it not tidy.
+
+### Load Data
+Since this dataset is very large, the file is not uploaded to github and I will be running this locally on my computer. 
+
 ```{r}
+# Get the list of restaurant violation citations
+url <-"DOHMH_New_York_City_Restaurant_Inspection_Results.csv"
+doh_file<- read.csv(url)
+```
+
+### Data Cleaning
+This dataset is fairly regular but because there are a lot of empty values it makes it hard to run any analysis. For data cleaning I will mainly focus on handling the missing data.
+```{r}
+# Handle "New Establishment"
+# Per the data index provided by DOH those with inspection data "01/01/1900" are new establishments created so does not have violation, grade, or any information
+
+# NE is variable for new establishment
+NE <- "01/01/1900"
+# NV is variable for action = No violations were recorded at the time of this inspection.
+NV <- "No violations were recorded at the time of this inspection."
+# RO is a variable for action = Establishment re-opened by DOHMH.
+RO <- "Establishment re-opened by DOHMH."
+
+doh_file <- doh_file %>% 
+  mutate(
+    # when establishment is new
+    CUISINE.DESCRIPTION = ifelse(INSPECTION.DATE == NE, "NEW ESTABLISHMENT", CUISINE.DESCRIPTION),
+    ACTION = ifelse(INSPECTION.DATE == NE, "NEW ESTABLISHMENT", ACTION),
+    VIOLATION.CODE = ifelse(INSPECTION.DATE == NE, "NEW ESTABLISHMENT", VIOLATION.CODE),
+    VIOLATION.DESCRIPTION = ifelse(INSPECTION.DATE == NE, "NEW ESTABLISHMENT", VIOLATION.DESCRIPTION),
+    INSPECTION.TYPE = ifelse(INSPECTION.DATE == NE, "NEW ESTABLISHMENT", INSPECTION.TYPE),
+    
+    # When no violation was recorded No violations were recorded at the time of this inspection.
+    VIOLATION.CODE = ifelse(ACTION == NV, "NONE", VIOLATION.CODE),
+    VIOLATION.DESCRIPTION = ifelse(ACTION == NV, "NO VIOLATION RECORDED", VIOLATION.DESCRIPTION),
+    
+    # When store is reopened by DOHMH
+    VIOLATION.CODE = ifelse(ACTION == RO, "Re-opened", VIOLATION.CODE),
+    VIOLATION.DESCRIPTION = ifelse(ACTION == RO, "Establishment Re-Opened by DOHMH", VIOLATION.DESCRIPTION),
+  )
+  
+# Any field that does not have a value will be set to NA
+doh_file[doh_file ==""] <- NA
+
 
 ```
+
+### Analyze
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

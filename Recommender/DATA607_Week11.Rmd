@@ -1,0 +1,73 @@
+---
+title: "DATA607_Week11"
+author: "Ying Fang Lee"
+output: html_document
+---
+
+## Recommender System
+
+### Identify a recommender system then answer the three scenario design questions for this website.
+
+#### Google Maps recommender system
+
+Google Maps Recommender System is very versatile, it suggests routes, places, restaurants, stores, and various points of interest based on user preferences, location history, search behavior, and other data. It uses collaborative filtering, contend-based filtering, and contextual recommendations to provide personalized suggestions to users.
+
+#### 1) Who are your Target users?
+
+The users of Google Maps are primarily individuals looking to navigate and discover new locations. These users could include:
+
+-   Commuters seeking efficient routes for daily travel.
+-   Tourists looking for popular attractions and recommended places to visit.
+-   Local residents exploring nearby services, restaurants, or businesses.
+-   Businesses seeking to optimize their locations and attract more customers.
+
+#### 2) What are their key goals?
+
+The purpose of the Google Maps recommender system is to suggest personalized places, routes, and points of interest based on the user's location, route destination, preferences, and behavior. By analyzing data such as the user’s location history, search history, and popular destinations, Google Maps aims to improve the user experience by recommending relevant and timely locations, restaurants, stores, traffic routes, and other services. The goal is to save time, improve navigation efficiency, and provide a better experience while exploring the world.
+
+#### 3) How can you help them accomplish these goals?
+
+-   Search behavior: User's search for destinations, restaurants, shops, or routes (e.g., typing “restaurants near me”).
+
+-   Location tracking: The app tracks users' locations (with permission) to provide real-time navigation, route recommendations, and location-based suggestions. (what establishments are open at this time that I can go to)
+
+-   Reviews and ratings: Users leave reviews and ratings for places they've visited, which help the system provide better recommendations for other users. (If you like to go to this place maybe others will too)
+
+-   Route planning: Google Maps recommends routes based on current traffic conditions, the user’s preferred mode of transport, and historical behavior. (alternative route search when there's traffic, tolls or no tolls route)
+
+-   Personalized recommendations: Based on past searches, visits, and ratings, Google Maps offers suggestions, such as restaurants or attractions that align with user preferences.
+
+#### Reverse Engineering the Google Maps Recommender System
+
+Google Maps uses a combination of location data, user behavior, and advanced machine learning algorithms to generate recommendations. Key data sources and algorithms include:
+
+Location Data: GPS data helps track a user’s current location and provides real-time navigation and suggestions based on proximity. For example, if a user is near a restaurant they’ve never visited, the system might recommend it based on their tastes or similar users' preferences.
+
+Search History: Google Maps tracks what places users search for, allowing the system to suggest locations based on prior behavior. For instance, if a user frequently searches for coffee shops, the system may recommend new coffee shops nearby.
+
+Reviews and Ratings: User-generated content such as reviews, ratings, and photographs contributes to recommendations. High-rated places or highly reviewed locations are given higher visibility and recommendations.
+
+Traffic Data and Route Preferences: Google Maps uses real-time traffic data to recommend faster routes and avoid congested areas. It also adjusts the recommendations based on user preferences for the shortest or fastest route.
+
+Collaborative Filtering: Based on the idea of recommending places that similar users have liked, collaborative filtering helps suggest locations that people with similar behaviors have visited or rated highly.
+
+Content-Based Filtering: The system can recommend places based on content similarity. For example, if a user often visits art museums, Google Maps might recommend similar museums nearby.
+
+Contextual and Temporal Data: Google Maps considers time of day, seasonal trends, and contextual data (such as weather conditions) to recommend places. For example, if it’s lunchtime, the system might suggest nearby restaurants that are highly rated for lunch or based on the time of day.
+
+Deep Learning: Google Maps likely uses advanced deep learning models for better prediction and rationalization. These models analyze patterns in user behavior, time of day, and context to make the best recommendations.
+
+#### Recommendations for improvement
+
+-   Make the recommendation more personalized with contextual prompts:
+
+    -   Going to an event hall for an hobby event, recommend near by hobby stores
+
+-   Incorporation of User's current mood to make more accurate suggestions:
+
+    -   User searched for something different than usual, recommend more advantageous places
+
+-   Improve localized and cultural relevance:
+
+    -   Which deity is enshrined in this temple and relevant surrounding areas that is related
+I believe Google Maps recommender system can improve by making it more interactive with the user and provide interactive and real-time suggestions based on the event triggered.

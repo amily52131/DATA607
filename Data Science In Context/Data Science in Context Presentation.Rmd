@@ -1,0 +1,303 @@
+---
+title: "Data Science In Context"
+author: "Ying Fang Lee"
+date: "2024-12-20"
+output: powerpoint_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+url <-"https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Project_2/candyhierarchy2017.csv"
+file<- read.csv(url, fileEncoding = "UTF-8")
+raw_1 <- read.csv(url, fileEncoding = "UTF-8")
+# Taking care of empty spaces and set them to NA
+file[file ==""] <- NA
+# Changing the ranking for candy to number for analysis later
+file[file=="MEH"] <- 2
+file[file=="JOY"] <- 3
+file[file=="DESPAIR"] <- 1
+
+US_States <- file$Q5..STATE..PROVINCE..COUNTY..ETC
+
+# State Patterns
+
+sname <- c("District of Columbia" ,  "Alabama"  , "Alaska"  , "American Samoa" ,   "Arizona" ,  "Arkansas" ,  "California" , "Colorado" , "Connecticut" , "Delaware" , "Florida" , "Georgia" , "Guam" , "Hawaii"  ,  "Idaho"  ,  "Illinois"  ,  "Indiana"  ,  "Iowa" , "Kansas" , "Kentucky" , "Louisiana" , "Maine" , "Maryland" , "Massachusetts" , "Michigan" , "Minnesota" , "Mississippi" , "Missouri" , "Montana" , "Nebraska" , "Nevada" , "New Hampshire" , "New Jersey" , "New Mexico" , "New York" , "North Carolina" , "North Dakota" , "Ohio" , "Oklahoma" , "Oregon" , "Pennsylvania" , "Puerto Rico" , "Rhode Island" , "South Carolina" , "South Dakota" , "Tennessee" , "Texas" , "Utah" , "Vermont" , "Virginia" , "Washington" , "West Virginia" , "Wisconsin" , "Wyoming")
+states2 <- c("DC" , "AL" , "AK" , "AS" , "AZ" , "AR" , "CA" , "CO" , "CT" , "DE" , "FL" , "GA" , "GU" , "HI" , "ID" , "IL" , "IN" , "IA" , "KS" , "KY" , "LA" , "ME" , "MD" , "MA" , "MI" , "MN" , "MS" , "MO" , "MT" , "NE" , "NV" , "NH" , "NJ" , "NM" , "NY" , "NC" , "ND" , "OH" , "OK" , "OR" , "PA" , "PR" , "RI" , "SC" , "SD" , "TN" , "TX" , "UT" , "VT" , "VA" , "WA" , "WV" , "WI" , "WY")
+
+spattern <- data.frame(sname ,  states2)
+
+# first iteration of states to convert state name to two letter abbreviation
+for(s in spattern$sname){
+  States <- agrep(s ,  US_States , ignore.case = TRUE, max.distance = 1)
+  US_States[States] <- toupper(spattern$states2[spattern$sname==s])
+}
+
+#ST <- as.data.frame(US_States) %>% distinct()
+
+# helper function to check if state pattern exists in the string
+return_logic <- function(spattern, string){
+  b <- FALSE
+  w <- strsplit(string, "[, ;.]+") #%>% unlist()
+  for (c in w){
+    if(2 %in%str_length(c) && TRUE %in% grepl(spattern, c, ignore.case = TRUE)){
+      b <- TRUE
+    }
+  }
+  returnValue(b)
+}
+# second iteration of states to convert state name to two letter abbreviation
+for (s in spattern$states2) {
+  for (x in US_States) {
+    if (return_logic(s,x) == TRUE){
+      US_States[US_States==x] <- s
+    }
+  }
+}
+
+ST <- as.data.frame(US_States) %>% distinct() %>% arrange(US_States)
+head(ST)
+# Overwrite the result of states cleaned
+file <- file %>% mutate(States = US_States)
+
+
+# Clean up country names 
+Countries <- file$Q4..COUNTRY %>% toupper() %>% str_trim()
+
+# Pattern to match
+pat <- c("USA","U.S.A", "U.S","United States","Costa Rica","America")
+# Other countries
+opat <- c("England", "Canada", "Mexico","Germany")
+
+# Match pattern where several instance of misspelled United States of America
+# Assign the Country to America
+for (p in pat){
+  matches <- agrep(p, Countries,ignore.case = TRUE, max.distance = 1)
+  Countries[matches] <- "USA"
+}
+# Match pattern for other countries
+for (p in opat){
+  matches <- agrep(p, Countries,ignore.case = TRUE, max.distance = 1)
+  Countries[matches] <- toupper(p)
+}
+# Some left the US State as the Country
+for(s in spattern$sname){
+  matches <- grep(s ,  Countries , ignore.case = TRUE)
+  Countries[matches] <- "USA"
+}
+
+Co <- as.data.frame(Countries) %>% distinct() %>% arrange(Countries)
+
+file <- file %>% mutate(Country = Countries)
+
+
+# Remove special characters from the column names
+names(file) <- gsub("Õ", "'", names(file))
+names(file) <- gsub("\\."," ",names(file))
+# Valid US data.
+vd_US <- file %>% 
+  mutate(notPerfect =  file %>% 
+           select(starts_with("Q6")) %>%
+           is.na %>% rowSums, .after = starts_with("Q5")) %>% 
+  filter(Country == "USA" & States %in% spattern$states2 & notPerfect == 0) %>% 
+  select(ID = 'Internal ID', 
+         Gender = starts_with("Q2"), 
+         Age = starts_with("Q3"),
+         Country,
+         States,
+         starts_with("Q6"))  %>% 
+  # rename_with(~gsub("^Q6   ","", .), starts_with("Q6"))
+  pivot_longer(
+    cols = starts_with("Q6"),
+    names_to = "Candy_Catagory",
+    values_to = "Rank",
+    values_drop_na = TRUE
+  )
+
+# Extract the values for candy type
+vd_US$Candy_Catagory <- gsub("Q6   ","",vd_US$Candy_Catagory)
+# Convert Rank as integer
+vd_US$Rank <- as.integer(vd_US$Rank)
+
+```
+
+```{r, warning=FALSE}
+# Get the list of audible books from csv file uploaded to Github
+url <-"https://raw.githubusercontent.com/amily52131/DATA607/refs/heads/main/Project_2/audible_uncleaned.csv"
+raw_2 <- read.csv(url)
+audible_file<- read.csv(url)
+# Filter only the English books
+audible_file <- audible_file %>% 
+  filter(language == "English")
+
+# Cleaning up the columns
+# Authors column remove "Writtenby"
+audible_file$author <- gsub("Writtenby:", "", audible_file$author)
+# Narrator column remove "Narratedby:"
+audible_file$narrator <- gsub("Narratedby:", "", audible_file$narrator)
+# Extract hours and minutes to total_length in minutes
+audible_file <- audible_file %>% 
+  mutate(hours = as.numeric(gsub("([0-9]+) hr.*", "\\1",audible_file$time)),
+         minutes = as.numeric(gsub(".* ([0-9]+) min.*$", "\\1",audible_file$time)),
+         hours = ifelse(is.na(hours), 0, hours),
+         minutes = ifelse(is.na(minutes), as.numeric(gsub("([0-9]+) min.*$", "\\1",audible_file$time)) , minutes),
+         minutes = ifelse(is.na(minutes), 0, minutes),
+         total_length = hours * 60 + minutes
+  )
+# Standardize date format
+audible_file$releasedate <- dmy(audible_file$releasedate)
+
+# Extract ratings and reviews
+audible_file <- audible_file %>% 
+  mutate( star_rating = as.numeric(gsub(" out of 5 stars.*", "", audible_file$stars)),
+          reviews = as.numeric(gsub(".*stars([0-9]+) rating.*", "\\1", stars)))
+```
+
+
+```{r, warning=FALSE}
+# Get the list of restaurant violation citations
+url <-"DOHMH_New_York_City_Restaurant_Inspection_Results.csv"
+raw_3 <- read.csv(url)
+doh_file<- read.csv(url)
+
+# Handle "New Establishment"
+# Per the data index provided by DOH those with inspection data "01/01/1900" are new establishments created so does not have violation, grade, or any information
+
+# NE is variable for new establishment
+NE <- "01/01/1900"
+# NV is variable for action = No violations were recorded at the time of this inspection.
+NV <- "No violations were recorded at the time of this inspection."
+# RO is a variable for action = Establishment re-opened by DOHMH.
+RO <- "Establishment re-opened by DOHMH."
+
+doh_file <- doh_file %>% 
+  mutate(
+    # when establishment is new
+    CUISINE.DESCRIPTION = ifelse(INSPECTION.DATE == NE, "NEW ESTABLISHMENT", CUISINE.DESCRIPTION),
+    ACTION = ifelse(INSPECTION.DATE == NE, "NEW ESTABLISHMENT", ACTION),
+    VIOLATION.CODE = ifelse(INSPECTION.DATE == NE, "NEW ESTABLISHMENT", VIOLATION.CODE),
+    VIOLATION.DESCRIPTION = ifelse(INSPECTION.DATE == NE, "NEW ESTABLISHMENT", VIOLATION.DESCRIPTION),
+    INSPECTION.TYPE = ifelse(INSPECTION.DATE == NE, "NEW ESTABLISHMENT", INSPECTION.TYPE),
+    
+    # When no violation was recorded No violations were recorded at the time of this inspection.
+    VIOLATION.CODE = ifelse(ACTION == NV, "NONE", VIOLATION.CODE),
+    VIOLATION.DESCRIPTION = ifelse(ACTION == NV, "NO VIOLATION RECORDED", VIOLATION.DESCRIPTION),
+    
+    # When store is reopened by DOHMH
+    VIOLATION.CODE = ifelse(ACTION == RO, "Re-opened", VIOLATION.CODE),
+    VIOLATION.DESCRIPTION = ifelse(ACTION == RO, "Establishment Re-Opened by DOHMH", VIOLATION.DESCRIPTION),
+    
+    # convert Inspection Date to date object 
+    INSPECTION.DATE = as.Date(INSPECTION.DATE, format = "%m/%d/%Y")
+  )
+
+# Any field that does not have a value will be set to NA
+doh_file[doh_file ==""] <- NA
+```
+
+## Data Science In Context
+
+The key to effective data analsis lies in **cleaning the data**. The result of any statistical model or test analysis would not be accurate if the data is not clean. Raw data is often incomplete, inconsistent, or contains errors that can skew analysis and lead to inaccurate conclusions. Data cleaning involves identifying and rectifying issues like missing values, duplicates, outliers, and formatting inconsistencies. By ensuring the data is accurate, reliable, and standardized, you create a solid foundation for further analysis, making it easier to uncover meaningful patterns and insights. Without proper data cleaning, even the most sophisticated models may produce unreliable results.
+
+## Why Clean Data Matters
+To get accurate insights from a given data set, the input raw data needs to maintain a level of quality. If the input values are incorrect then it will not lead to the correct output result even if the analysis process is correct. 
+
+Cleaning data also ensures that the data is structured in a way that can perform uniform transformations. 
+
+
+
+## Raw Data Quality
+
+- Sometimes the quality of data is more difficult to process if the initial data is from user input which will have many unexpected answers.  
+- Missing values on a dataset may also affect the approach on how to analyze a dataset   
+- Categorical variables in stored as chatacters on a dataset also limits the kind of analysis that can be performed on a dataset.  
+
+## Example of Messy Data
+
+```{r, echo=FALSE}
+messy <- raw_1 %>% select(c(1:8),c(112)) %>% head(5)%>% knitr::kable()
+messy
+```
+
+## Looking into Messy Data
+- Data has lots of missing data
+- User entry on the column State and Country
+- Categorical variables for the survey answers cannot be processed 
+
+
+
+## Missing Values
+Do we fill in the missing value or do we delete the row?
+
+Why it matters: If we ignore it the data result might be biased or inaccurate 
+
+## Example of Missing Data
+
+```{r, echo=FALSE}
+raw_3 %>% head(5) %>% knitr::kable()
+```
+
+## Missing Data
+This dataset comes from [DOHMH New York City Restaurant Inspection Results](https://data.cityofnewyork.us/Health/DOHMH-New-York-City-Restaurant-Inspection-Results/43nn-pn8j/about_data) where it contains the violation citations from every full or special program inspection conducted up to three years prior to the most recent inspection for restaurants and college cafeterias. 
+
+The missing values were for new establishments that have yet to had an inspection. 
+
+Do we remove it? Or do we keep it?
+
+## Techniques for Handling Missing Values
+Imputation: Filling missing values with the mean, median, or mode of the column.
+Deletion: Removing rows or columns with missing values (but be careful not to lose too much information).
+Forward/Backward Fill: Using previous or next values in time-series data to fill gaps.
+
+## Encoding Categorical Variables
+
+To perform analysis, the variables will need to be in the right type. Statistical tests and machine learning models often require numerical input. Date/time analysis will require the variables be converted into Date objects so that sorting and transforming will be easier.
+
+## Example of categorical variables
+```{r}
+messy
+```
+
+## Categorical Variables
+
+This dataset comes from a survey conducted on what is the most popular Halloween candy. [SO MUCH CANDY DATA, SERIOUSLY](https://www.scq.ubc.ca/so-much-candy-data-seriously/) 
+
+- The survey categorized the response into: "MEH", "JOY", "DESPAIR"
+
+How can we analyze candy ranking by words?
+
+## Tchniques to Encoding Categorical Variables
+
+One-Hot Encoding: Converting categorical variables into binary columns (e.g., creating a column for each country: US, UK, India).
+
+Label Encoding: Converting categorical labels into numeric codes (e.g., male = 0, female = 1).
+
+
+## Normalization/Scaling
+
+Many algorithms (e.g., k-NN, SVM, linear regression) perform better when features are on a similar scale
+
+## Example of Normalization/Scaling
+```{r}
+audible_file %>% select(name, releasedate, stars, star_rating, reviews, total_length) %>% head(5) %>% knitr::kable()
+```
+
+## Scaling
+
+This dataset from Kaggle [Audible Dataset](https://www.kaggle.com/datasets/snehangsude/audible-dataset?select=audible_uncleaned.csv) aimed to understand how the audio book market has been growing over the years.
+
+Should the book that has 5 stars rating but only 1 review be considered the same rating as another book that is also 5 stars with 1000 reviews?
+
+## Techniques to Normalization/Scaling
+
+- Min-Max Scaling: Re-scaling values to a range between 0 and 1.
+- Standardization (Z-score): Transforming data to have a mean of 0 and a standard deviation of 1.
+
+## Tidy Data
+
+Tidy data is a concept introduced by Hadley Wickham in the context of data analysis, and it refers to organizing data in a consistent and structured way that makes it easier to clean, analyze, and visualize. Tidy data is important for data cleaning for several reasons, and understanding these benefits can help ensure that your data is in a form that's ready for analysis with minimal effort.
+
+## Conclusion
+- Data preprocessing is an essential part of the data analysis pipeline and can significantly improve model accuracy.
+- By handling missing data, encoding categorical variables, scaling numerical features, and creating new meaningful features, data scientists can build more reliable and effective machine learning models.
+- By organizing your data in a tidy format, you make it easier to clean, analyze, and visualize, ultimately leading to more accurate insights and better decisions.
